@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Kaggle competition data
+data/
+
+# Model/output files
+outputs/
+models/
+
 # Distribution / packaging
 .Python
 build/
