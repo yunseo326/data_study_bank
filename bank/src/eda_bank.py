@@ -262,13 +262,14 @@ def make_html(a: dict) -> str:
     <h2>수치형 변수의 범위</h2><article>{dataframe_table(a['num_stats'])}</article>
 
     <h2>권장 검증과 다음 실험</h2><article><ol>
-      <li><strong>1순위: Stratified 5-Fold 기준선.</strong> 양성 비율을 폴드마다 유지하고, 대회의 평가 지표가 ROC AUC라면 OOF AUC로 비교합니다. 평가지표는 대회 페이지에서 별도 확인해야 합니다.</li>
+      <li><strong>1순위: Stratified 5-Fold 기준선.</strong> 양성 비율을 폴드마다 유지하고, 공식 평가 지표인 ROC AUC를 OOF 점수로 비교합니다.</li>
       <li><strong>2순위: duration 포함/제외를 한 변수만 바꿔 비교.</strong> Kaggle 점수용 모델과 실제 사전 타기팅 모델의 차이를 학습할 수 있습니다.</li>
       <li><strong>3순위: pdays의 상태 분리.</strong> <code>previous_contacted = (pdays != -1)</code>를 추가하고 원래 pdays는 유지한 채 성능 변화를 봅니다.</li>
       <li><strong>4순위: 범주형 모델 기준선.</strong> CatBoost 또는 적절한 인코딩을 사용한 LightGBM 계열이 자연스럽습니다. 먼저 단순 기준선을 고정한 뒤 하나씩 바꿉니다.</li>
       <li><strong>5순위: 검증 안정성 확인.</strong> ID 구간별·월별 OOF 성능과 양성률을 확인해 무작위 폴드가 숨은 생성 순서를 놓치지 않는지 점검합니다.</li>
+      <li><strong>6순위: 원본 데이터 결합 실험.</strong> 공식 설명상 원본 Bank Marketing Dataset을 사용할 수 있습니다. 기준선이 안정된 뒤 원본 데이터 추가 여부만 바꿔 효과를 확인합니다.</li>
     </ol></article>
-    <footer>분석 기준: 로컬 train.csv, test.csv, sample_submission.csv · 생성 스크립트: bank/src/eda_bank.py · 재현용 랜덤 시드: 326</footer></main></body></html>"""
+    <footer>분석 기준: 로컬 train.csv, test.csv, sample_submission.csv · 원문: <a href="https://www.kaggle.com/competitions/playground-series-s5e8" target="_blank" rel="noopener noreferrer">Kaggle 대회 페이지</a> · 생성 스크립트: bank/src/eda_bank.py · 재현용 랜덤 시드: 326</footer></main></body></html>"""
 
 
 def main() -> None:
