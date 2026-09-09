@@ -1,0 +1,5 @@
+benchmark,model,cv_auc,public_lb,private_lb,complexity,source_url,note
+공개 NN 기준선,MLP with categorical embeddings,0.974,,,단일 신경망,https://www.kaggle.com/competitions/playground-series-s5e8/discussion/600617,XGBoost와 혼합 시 CV 0.97600에서 0.97626으로 개선
+강한 단일 모델,Single XGBoost,0.975782,0.97681,,단일 GBDT,https://www.kaggle.com/code/mahoganybuttstrings/pg-s5e8-single-xgb-cv-0-975782-lb-0-97681,공개 노트북에 보고된 CV와 LB
+19위 최종 앙상블,108 OOF RidgeCV blend,0.977242,0.97784,0.97744,대규모 앙상블,https://www.kaggle.com/competitions/playground-series-s5e8/writeups/19th-place-solution-108-oofs-blending-with-ridgecv,선형 회귀를 제외한 최종 제출
+6위 스태킹,OOF stacking with LightGBM,0.97739,,0.97775,대규모 스태킹,https://www.kaggle.com/competitions/playground-series-s5e8/writeups/6th-place-solution-oof-stacking-with-lgbm,원본 피처를 메타 모델에 추가

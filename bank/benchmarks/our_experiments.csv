@@ -1,0 +1,2 @@
+experiment_id,date,purpose,model,features,validation,cv_auc,public_lb,status,interpretation
+E000,2026-09-09,데이터 이해와 검증 준비,미실행,원본 16개 피처,Stratified 5-Fold 예정,,,EDA 완료,모델 성능은 아직 평가하지 않음

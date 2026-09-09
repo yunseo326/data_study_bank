@@ -15,6 +15,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "bank" / "data"
+BENCHMARK_DIR = ROOT / "bank" / "benchmarks"
 DOCS_PATH = ROOT / "docs" / "index.html"
 SUMMARY_PATH = ROOT / "logs" / "result" / "bank_eda_summary.json"
 RNG = np.random.default_rng(326)
@@ -209,6 +210,25 @@ def make_html(a: dict) -> str:
     poutcome = a["category_cards"].get("poutcome")
     month = a["category_cards"].get("month")
     job = a["category_cards"].get("job")
+    public_models = pd.read_csv(BENCHMARK_DIR / "public_models.csv")
+    our_experiments = pd.read_csv(BENCHMARK_DIR / "our_experiments.csv")
+
+    benchmark_rows = []
+    for _, row in public_models.iterrows():
+        def score(name: str) -> str:
+            return "—" if pd.isna(row[name]) else f"{float(row[name]):.6f}"
+        benchmark_rows.append(
+            "<tr>"
+            f"<td><a href=\"{esc(row['source_url'])}\" target=\"_blank\" rel=\"noopener noreferrer\">{esc(row['benchmark'])}</a></td>"
+            f"<td>{esc(row['model'])}</td><td>{score('cv_auc')}</td><td>{score('public_lb')}</td>"
+            f"<td>{score('private_lb')}</td><td>{esc(row['complexity'])}</td></tr>"
+        )
+    benchmark_table = (
+        '<div class="table-wrap"><table><thead><tr><th>비교 기준</th><th>모델</th><th>CV AUC</th>'
+        '<th>Public LB</th><th>Private LB</th><th>복잡도</th></tr></thead><tbody>'
+        + "".join(benchmark_rows) + "</tbody></table></div>"
+    )
+    current = our_experiments.iloc[-1]
 
     duration_html = dataframe_table(duration_pattern, {"양성률"}) if duration_pattern is not None else ""
     cat_sections = []
@@ -231,6 +251,7 @@ def make_html(a: dict) -> str:
     h2{font-size:28px;letter-spacing:-.025em;margin:56px 0 18px}h3{margin:0 0 14px;font-size:18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.two{grid-template-columns:repeat(2,1fr)}
     .card,article{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(33,56,93,.05)}.metric{font-size:30px;font-weight:800;letter-spacing:-.04em}.label,.note{color:var(--muted);font-size:13px}
     .finding{border-left:4px solid var(--blue)}.warning{border-left-color:var(--amber)}.risk{border-left-color:var(--red)}.good{border-left-color:var(--teal)}
+    .status-line{display:flex;align-items:center;gap:10px;margin-top:12px}.pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#e9f8f4;color:#087764;font-size:12px;font-weight:800}.pending{background:#fff3df;color:#9a5a05}.score-empty{font-size:36px;font-weight:800;letter-spacing:-.04em}.rule-list{margin:0;padding-left:20px}.rule-list li{margin:7px 0}
     .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th{color:var(--muted);font-weight:700;background:#f8faff}th:first-child,td:first-child{text-align:left}
     .bar-row{display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;margin:10px 0;font-size:13px}.bar-track{height:9px;background:#e9eef7;border-radius:9px;overflow:hidden}.bar-track span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#63a0ff);border-radius:9px}.bar-value{text-align:right;font-variant-numeric:tabular-nums}
     code{background:#eef2f8;padding:2px 5px;border-radius:5px}ol li{margin:8px 0}.small{font-size:12px;color:var(--muted)}footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
@@ -240,6 +261,13 @@ def make_html(a: dict) -> str:
     <body><main><div class="eyebrow">Kaggle Data Analysis Study · Competition 1</div><h1>Bank 데이터 1차 분석</h1>
     <p class="lead">모델을 돌리기 전에 데이터가 무엇을 말하는지, 검증에서 무엇을 조심해야 하는지 확인했습니다. 원본 CSV는 변경하지 않았습니다.</p>
     <section class="grid"><div class="card"><div class="metric">{fmt_int(len(train))}</div><div class="label">학습 행</div></div><div class="card"><div class="metric">{fmt_int(len(test))}</div><div class="label">테스트 행</div></div><div class="card"><div class="metric">{len(a['features'])}</div><div class="label">예측 변수</div></div><div class="card"><div class="metric">{fmt_pct(a['target_rate'])}</div><div class="label">타깃 y=1 비율</div></div></section>
+
+    <h2>우리 모델은 어느 수준인가</h2><section class="grid two">
+      <article class="finding warning"><h3>현재 단계</h3><div class="score-empty">점수 없음</div><div class="status-line"><span class="pill">EDA 완료</span><span class="pill pending">기준 모델 대기</span></div><p class="note">{esc(current['interpretation'])}. 첫 Stratified 5-Fold OOF 결과가 생기면 공개 모델과 비교를 시작합니다.</p></article>
+      <article><h3>평가 원칙</h3><ol class="rule-list"><li>주지표는 같은 분할에서 계산한 OOF ROC AUC</li><li>Public LB는 검증이 실제 테스트에도 이어지는지 확인하는 보조 지표</li><li>단일 모델은 단일 모델끼리 비교</li><li>점수와 함께 모델 수·외부 데이터·학습 비용을 기록</li></ol></article>
+    </section>
+    <article style="margin-top:14px"><h3>공개 모델 벤치마크</h3>{benchmark_table}<p class="note">선택한 공개 자료의 보고값입니다. 서로 다른 검증 분할에서 나온 CV는 완전히 같은 조건의 순위표가 아니므로, 절대 순위보다 도달 가능한 수준을 판단하는 기준으로 사용합니다.</p></article>
+    <section class="grid two" style="margin-top:14px"><article><h3>단일 모델 목표</h3><p><strong>1차 통과:</strong> CV 0.970<br><strong>강한 기준:</strong> CV 0.974<br><strong>상위 단일 모델권:</strong> CV 0.976 전후</p><p class="note">첫 목표는 복잡한 앙상블이 아니라 재현 가능한 단일 모델입니다.</p></article><article><h3>앙상블 목표</h3><p><strong>경쟁력 있는 수준:</strong> CV 0.9765 이상<br><strong>공개 상위권 사례:</strong> CV 0.9773 전후</p><p class="note">단일 모델의 가설 실험이 끝난 뒤에만 비교합니다. 수십~수백 모델 앙상블과 첫 기준선을 직접 비교하지 않습니다.</p></article></section>
 
     <h2>먼저 알아야 할 결론</h2><section class="grid two">
       <article class="finding risk"><h3>duration은 가장 강하지만 사용 시점을 확인해야 합니다</h3><p><code>duration</code>은 타깃과의 단변량 연관성이 가장 큽니다. 통화가 끝난 뒤에만 알 수 있는 통화시간이라면 사전 고객 선별 모델에서는 누수입니다. Kaggle 제출 모델과 실제 영업 모델의 허용 피처가 달라질 수 있습니다.</p></article>

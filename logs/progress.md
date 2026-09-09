@@ -22,3 +22,12 @@
 - 데이터 생성: 원본 Bank Marketing Dataset을 학습한 딥러닝 모델이 현재 train/test를 생성했다.
 - 새 실험 후보: 대회에서 원본 Bank Marketing Dataset 사용을 허용하므로, 기준선 이후 원본 데이터 결합 효과를 한 변수만 바꾸어 검증할 수 있다.
 - 산출물: `bank/README.md`와 HTML 보고서에 원문에서 확인한 정보를 반영했다.
+
+## Bank 03 — 공개 모델 벤치마크 구성 (2026-09-09)
+
+- 목적: 우리의 OOF ROC AUC가 어느 수준인지 공개 모델과 공정하게 비교한다.
+- 비교 기준: 단일 모델과 대규모 앙상블을 분리하고, 모델 복잡도와 출처를 함께 기록한다.
+- 공개 기준: MLP 0.974, 강한 단일 XGBoost 0.975782, 공개 상위 앙상블 약 0.9772~0.9774 CV.
+- 현재 평가: EDA는 완료했지만 기준 모델이 없어 성능 점수는 아직 평가하지 않는다.
+- 산출물: `bank/benchmarks/public_models.csv`, `bank/benchmarks/our_experiments.csv`, `bank/benchmarks/README.md`와 HTML 비교 대시보드.
+- 다음 통과 기준: 고정된 Stratified 5-Fold에서 첫 OOF ROC AUC를 생성한다.
