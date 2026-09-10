@@ -12,6 +12,7 @@ data/
 # Model/output files
 outputs/
 models/
+.runtime_pkgs/
 
 # Distribution / packaging
 .Python

@@ -1,2 +1,12 @@
-experiment_id,date,purpose,model,features,validation,cv_auc,public_lb,status,interpretation
-E000,2026-09-09,데이터 이해와 검증 준비,미실행,원본 16개 피처,Stratified 5-Fold 예정,,,EDA 완료,모델 성능은 아직 평가하지 않음
+﻿experiment_id,date,purpose,baseline_id,changed_element,model,features,validation,seed,cv_auc,fold_std,fold_scores,public_lb,runtime_minutes,status,interpretation
+E000,2026-09-09,데이터 이해와 검증 준비,,,미실행,원본 16개 피처,Stratified 5-Fold 예정,,,,,,,EDA 완료,모델 성능은 아직 평가하지 않음
+E001,2026-09-10,Kaggle 점수 트랙 기준선,,첫 기준 모델,catboost,base (16),Stratified 5-Fold OOF,326,0.963737,0.000202,0.963728|0.963361|0.963846|0.963955|0.963800,,12.56,완료,제공된 16개 피처를 사용하는 첫 CatBoost 기준선
+E002,2026-09-10,통화 전 현실 트랙 기준선,E001,duration 제외,catboost,no_duration (15),Stratified 5-Fold OOF,326,0.845737,0.000563,0.846060|0.845953|0.845648|0.846357|0.844715,,12.23,완료,예측 시점에 알 수 없는 duration의 성능 기여를 분리
+E003,2026-09-10,이전 연락 상태 피처 검증,E001,previous_contacted 추가,catboost,previous_contacted (17),Stratified 5-Fold OOF,326,0.963745,0.000233,0.963658|0.963348|0.963915|0.964018|0.963799,,12.73,완료,pdays=-1의 공식 의미를 명시적 상태 피처로 분리
+E001-LIGHTGBM,2026-09-10,Kaggle 점수 트랙 기준선,E001,model catboost → lightgbm,lightgbm,base (16),Stratified 5-Fold OOF,326,0.968502,0.000220,0.968407|0.968353|0.968774|0.968751|0.968229,,6.38,완료,같은 피처와 fold에서 lightgbm 모델만 비교
+E001-XGBOOST,2026-09-10,Kaggle 점수 트랙 기준선,E001,model catboost → xgboost,xgboost,base (16),Stratified 5-Fold OOF,326,0.968348,0.000235,0.968371|0.968141|0.968637|0.968564|0.968028,,9.61,완료,같은 피처와 fold에서 xgboost 모델만 비교
+E004,2026-09-10,LightGBM 범주형 처리 검증,E001-LIGHTGBM,범주형 피처 명시,lightgbm,base (16),Stratified 5-Fold OOF,326,0.968589,0.000210,0.968475|0.968348|0.968892|0.968783|0.968448,,7.58,완료,같은 파라미터에서 범주형 열을 LightGBM 범주형 피처로 명시
+E005,2026-09-10,LightGBM 학습 상한 검증,E004,n_estimators 1500 → 3000,lightgbm,base (16),Stratified 5-Fold OOF,326,0.969033,0.000249,0.968966|0.968865|0.969380|0.969254|0.968704,,13.83,완료,E004의 모든 fold가 학습 상한에 도달해 최대 트리 수만 확대
+E006,2026-09-11,LightGBM 리프 복잡도 검증,E005,num_leaves 31 → 63,lightgbm,base (16),Stratified 5-Fold OOF,326,0.969168,0.000219,0.969108|0.969047|0.969432|0.969398|0.968854,,39.29,완료,E005를 유지하고 트리 하나가 표현할 수 있는 분할 수만 확대
+E007,2026-09-11,LightGBM 리프 최소 표본 검증,E006,min_child_samples 20 → 50,lightgbm,base (16),Stratified 5-Fold OOF,326,0.969128,0.000170,0.969072|0.968947|0.969374|0.969279|0.968971,,11.21,완료,E006을 유지하고 작은 리프에 대한 일반화 제약만 강화
+E008,2026-09-11,LightGBM 행 샘플링 검증,E006,subsample_freq 0 → 1,lightgbm,base (16),Stratified 5-Fold OOF,326,0.969283,0.000199,0.969202|0.969156|0.969506|0.969531|0.969029,,8.97,완료,E006을 유지하고 기존 subsample=0.8 행 샘플링만 활성화

@@ -17,7 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "bank" / "data"
 BENCHMARK_DIR = ROOT / "bank" / "benchmarks"
 DOCS_PATH = ROOT / "docs" / "index.html"
-SUMMARY_PATH = ROOT / "logs" / "result" / "bank_eda_summary.json"
+SUMMARY_PATH = ROOT / "bank" / "logs" / "result" / "bank_eda_summary.json"
+MODEL_ANALYSIS_PATH = ROOT / "bank" / "logs" / "result" / "model_analysis.json"
 RNG = np.random.default_rng(326)
 
 DATA_DICTIONARY = [
@@ -86,7 +87,8 @@ def dataframe_table(frame: pd.DataFrame, percent_cols: set[str] | None = None) -
             if col in percent_cols and pd.notna(value):
                 shown = fmt_pct(float(value))
             elif isinstance(value, (float, np.floating)):
-                shown = f"{value:,.3f}"
+                digits = 6 if "AUC" in col or "상관" in col else 3
+                shown = f"{value:,.{digits}f}"
             elif isinstance(value, (int, np.integer)):
                 shown = fmt_int(value)
             else:
@@ -232,6 +234,8 @@ def make_html(a: dict) -> str:
     job = a["category_cards"].get("job")
     public_models = pd.read_csv(BENCHMARK_DIR / "public_models.csv")
     our_experiments = pd.read_csv(BENCHMARK_DIR / "our_experiments.csv")
+    our_experiments["cv_auc_num"] = pd.to_numeric(our_experiments["cv_auc"], errors="coerce")
+    completed = our_experiments.dropna(subset=["cv_auc_num"]).copy()
 
     benchmark_rows = []
     for _, row in public_models.iterrows():
@@ -248,7 +252,90 @@ def make_html(a: dict) -> str:
         '<th>Public LB</th><th>Private LB</th><th>복잡도</th></tr></thead><tbody>'
         + "".join(benchmark_rows) + "</tbody></table></div>"
     )
-    current = our_experiments.iloc[-1]
+    if len(completed):
+        best = completed.loc[completed["cv_auc_num"].idxmax()]
+        current_score = f"{best['cv_auc_num']:.6f}"
+        current_title = f"현재 최고 · {esc(best['experiment_id'])}"
+        current_status = "1차 목표 통과" if best["cv_auc_num"] >= 0.970 else "1차 목표까지 분석 필요"
+        current_class = "good" if best["cv_auc_num"] >= 0.970 else "warning"
+        current_note = esc(best["interpretation"])
+    else:
+        best = our_experiments.iloc[-1]
+        current_score = "점수 없음"
+        current_title = "현재 단계"
+        current_status = "기준 모델 대기"
+        current_class = "warning"
+        current_note = esc(best["interpretation"])
+
+    score_by_id = dict(zip(completed["experiment_id"], completed["cv_auc_num"]))
+    kaggle_track = score_by_id.get("E001")
+    realistic_track = score_by_id.get("E002")
+    kaggle_track_text = "대기" if kaggle_track is None else f"{kaggle_track:.6f}"
+    realistic_track_text = "대기" if realistic_track is None else f"{realistic_track:.6f}"
+    duration_gap_text = "두 실험 완료 후 계산" if kaggle_track is None or realistic_track is None else f"{kaggle_track - realistic_track:+.6f} AUC"
+    experiment_rows = []
+    for _, row in our_experiments.iloc[::-1].iterrows():
+        score_value = row["cv_auc_num"]
+        score = "—" if pd.isna(score_value) else f"{float(score_value):.6f}"
+        baseline_id = row.get("baseline_id", "")
+        baseline_score = score_by_id.get(baseline_id)
+        delta = "—" if pd.isna(score_value) or baseline_score is None else f"{float(score_value) - baseline_score:+.6f}"
+        fold_std_value = row.get("fold_std", "")
+        fold_std = "—" if pd.isna(fold_std_value) or fold_std_value == "" else esc(fold_std_value)
+        experiment_rows.append(
+            "<tr>"
+            f"<td>{esc(row['experiment_id'])}</td><td>{esc(row['purpose'])}</td>"
+            f"<td>{esc(row['model'])}</td><td>{score}</td><td>{delta}</td>"
+            f"<td>{fold_std}</td><td>{esc(row['status'])}</td></tr>"
+        )
+    experiment_table = (
+        '<div class="table-wrap"><table><thead><tr><th>실험</th><th>목적</th><th>모델</th>'
+        '<th>OOF AUC</th><th>기준 대비</th><th>Fold 표준편차</th><th>상태</th></tr></thead><tbody>'
+        + "".join(experiment_rows) + "</tbody></table></div>"
+    )
+    model_diagnostics_html = ""
+    if MODEL_ANALYSIS_PATH.exists():
+        model_analysis = json.loads(MODEL_ANALYSIS_PATH.read_text(encoding="utf-8"))
+        importance = model_analysis.get("feature_importance", [])[:10]
+        importance_html = bar_list([
+            (row["feature"], float(row["gain_share"])) for row in importance
+        ]) if importance else "<p>새 실험의 피처 중요도 기록이 없습니다.</p>"
+
+        weak = pd.DataFrame(model_analysis.get("weakest_segments", []))
+        if len(weak):
+            weak = weak.rename(columns={
+                "segment": "구분", "value": "값", "rows": "행 수",
+                "positive_rate": "양성률", "auc": "OOF AUC",
+            })[["구분", "값", "행 수", "양성률", "OOF AUC"]]
+            weak_html = dataframe_table(weak, {"양성률"})
+        else:
+            weak_html = "<p>세그먼트 진단이 없습니다.</p>"
+
+        blends = pd.DataFrame(model_analysis.get("fixed_half_blends", [])[:6])
+        if len(blends):
+            blends = blends.rename(columns={
+                "left": "모델 A", "right": "모델 B", "weight": "가중치", "oof_auc": "OOF AUC",
+            })
+            blend_html = dataframe_table(blends)
+        else:
+            blend_html = "<p>비교할 OOF 조합이 없습니다.</p>"
+
+        correlations = pd.DataFrame(model_analysis.get("prediction_correlations", []))
+        if len(correlations):
+            correlations = correlations.rename(columns={
+                "left": "모델 A", "right": "모델 B", "correlation": "예측 상관",
+            })
+            correlation_html = dataframe_table(correlations)
+        else:
+            correlation_html = "<p>예측 상관 진단이 없습니다.</p>"
+
+        model_diagnostics_html = f"""
+        <h2>최고 모델을 어떻게 해석할까</h2><section class="grid two">
+          <article><h3>피처 중요도 · gain 비중</h3><p class="note">{esc(model_analysis['best_experiment'])}의 5개 fold 평균입니다. 모델이 분할에서 얻은 이득이지 인과효과는 아닙니다.</p>{importance_html}</article>
+          <article><h3>성능이 낮은 고객군</h3><p class="note">표본 1,000개 이상인 그룹 중 AUC가 낮은 순서입니다. 양성률이 매우 높은 작은 월은 전체보다 순위 구분이 어렵습니다.</p>{weak_html}</article>
+          <article><h3>모델 예측 상관</h3><p class="note">상관이 1에 가까울수록 같은 고객을 비슷하게 평가합니다. 높은 상관은 혼합의 추가 이득이 작을 수 있음을 뜻합니다.</p>{correlation_html}</article>
+          <article><h3>고정 50:50 혼합</h3><p class="note">OOF에서 가중치를 탐색하지 않은 진단용 비교입니다. 단일 모델 0.970 목표와는 별도로 봅니다.</p>{blend_html}</article>
+        </section>"""
     dictionary_html = dataframe_table(pd.DataFrame(DATA_DICTIONARY)).replace(
         "<table>", '<table class="dictionary">'
     )
@@ -280,15 +367,18 @@ def make_html(a: dict) -> str:
     code{background:#eef2f8;padding:2px 5px;border-radius:5px}ol li{margin:8px 0}.small{font-size:12px;color:var(--muted)}footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
     @media(max-width:820px){.grid,.two{grid-template-columns:1fr 1fr}}@media(max-width:560px){main{padding-top:28px}.grid,.two{grid-template-columns:1fr}.bar-row{grid-template-columns:88px 1fr 58px}h2{margin-top:42px}}
     """
-    return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Bank Kaggle 데이터 1차 EDA"><title>Bank 데이터 1차 분석</title><style>{css}</style></head>
-    <body><main><div class="eyebrow">Kaggle Data Analysis Study · Competition 1</div><h1>Bank 데이터 1차 분석</h1>
-    <p class="lead">모델을 돌리기 전에 데이터가 무엇을 말하는지, 검증에서 무엇을 조심해야 하는지 확인했습니다. 원본 CSV는 변경하지 않았습니다.</p>
+    return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Bank Kaggle 데이터 분석과 모델링 실험"><title>Bank 데이터 분석과 모델링</title><style>{css}</style></head>
+    <body><main><div class="eyebrow">Kaggle Data Analysis Study · Competition 1</div><h1>Bank 데이터 분석과 모델링</h1>
+    <p class="lead">데이터 품질과 누수 위험을 확인하고, 고정된 OOF 검증에서 한 요소씩 바꾼 실험 결과를 정리했습니다. 원본 CSV는 변경하지 않았습니다.</p>
     <section class="grid"><div class="card"><div class="metric">{fmt_int(len(train))}</div><div class="label">학습 행</div></div><div class="card"><div class="metric">{fmt_int(len(test))}</div><div class="label">테스트 행</div></div><div class="card"><div class="metric">{len(a['features'])}</div><div class="label">예측 변수</div></div><div class="card"><div class="metric">{fmt_pct(a['target_rate'])}</div><div class="label">타깃 y=1 비율</div></div></section>
 
     <h2>우리 모델은 어느 수준인가</h2><section class="grid two">
-      <article class="finding warning"><h3>현재 단계</h3><div class="score-empty">점수 없음</div><div class="status-line"><span class="pill">EDA 완료</span><span class="pill pending">기준 모델 대기</span></div><p class="note">{esc(current['interpretation'])}. 첫 Stratified 5-Fold OOF 결과가 생기면 공개 모델과 비교를 시작합니다.</p></article>
+      <article class="finding {current_class}"><h3>{current_title}</h3><div class="score-empty">{current_score}</div><div class="status-line"><span class="pill">EDA 완료</span><span class="pill">{current_status}</span></div><p class="note">{current_note}</p></article>
       <article><h3>평가 원칙</h3><ol class="rule-list"><li>주지표는 같은 분할에서 계산한 OOF ROC AUC</li><li>Public LB는 검증이 실제 테스트에도 이어지는지 확인하는 보조 지표</li><li>단일 모델은 단일 모델끼리 비교</li><li>점수와 함께 모델 수·외부 데이터·학습 비용을 기록</li></ol></article>
     </section>
+    <section class="grid" style="margin-top:14px"><div class="card"><div class="metric">{kaggle_track_text}</div><div class="label">Kaggle 점수 트랙 · E001</div></div><div class="card"><div class="metric">{realistic_track_text}</div><div class="label">통화 전 현실 트랙 · E002</div></div><div class="card"><div class="metric">{duration_gap_text}</div><div class="label">duration이 만든 검증 격차</div></div><div class="card"><div class="metric">0.970</div><div class="label">현재 1차 통과 목표</div></div></section>
+    <article style="margin-top:14px"><h3>우리 실험 기록</h3>{experiment_table}<p class="note">기준 대비 값은 같은 고정 폴드에서 선언된 기준 실험과 비교합니다. 한 번에 한 요소만 바꾼 경우에만 원인을 해석합니다.</p></article>
+    {model_diagnostics_html}
     <article style="margin-top:14px"><h3>공개 모델 벤치마크</h3>{benchmark_table}<p class="note">선택한 공개 자료의 보고값입니다. 서로 다른 검증 분할에서 나온 CV는 완전히 같은 조건의 순위표가 아니므로, 절대 순위보다 도달 가능한 수준을 판단하는 기준으로 사용합니다.</p></article>
     <section class="grid two" style="margin-top:14px"><article><h3>단일 모델 목표</h3><p><strong>1차 통과:</strong> CV 0.970<br><strong>강한 기준:</strong> CV 0.974<br><strong>상위 단일 모델권:</strong> CV 0.976 전후</p><p class="note">첫 목표는 복잡한 앙상블이 아니라 재현 가능한 단일 모델입니다.</p></article><article><h3>앙상블 목표</h3><p><strong>경쟁력 있는 수준:</strong> CV 0.9765 이상<br><strong>공개 상위권 사례:</strong> CV 0.9773 전후</p><p class="note">단일 모델의 가설 실험이 끝난 뒤에만 비교합니다. 수십~수백 모델 앙상블과 첫 기준선을 직접 비교하지 않습니다.</p></article></section>
 
@@ -322,13 +412,13 @@ def make_html(a: dict) -> str:
 
     <h2>수치형 변수의 범위</h2><article>{dataframe_table(a['num_stats'])}</article>
 
-    <h2>권장 검증과 다음 실험</h2><article><ol>
-      <li><strong>1순위: Stratified 5-Fold 기준선.</strong> 양성 비율을 폴드마다 유지하고, 공식 평가 지표인 ROC AUC를 OOF 점수로 비교합니다.</li>
-      <li><strong>2순위: duration 포함/제외를 한 변수만 바꿔 비교.</strong> 포함 모델은 Kaggle 점수 트랙, 제외 모델은 통화 전 사전 타기팅 트랙으로 이름과 목적을 분리합니다.</li>
-      <li><strong>3순위: pdays의 상태 분리.</strong> <code>previous_contacted = (pdays != -1)</code>를 추가하고 원래 pdays는 유지한 채 성능 변화를 봅니다.</li>
-      <li><strong>4순위: 범주형 모델 기준선.</strong> CatBoost 또는 적절한 인코딩을 사용한 LightGBM 계열이 자연스럽습니다. 먼저 단순 기준선을 고정한 뒤 하나씩 바꿉니다.</li>
-      <li><strong>5순위: 검증 안정성 확인.</strong> ID 구간별·월별 OOF 성능과 양성률을 진단하되, 연도가 없는 month를 시간 분할로 간주하지 않습니다.</li>
-      <li><strong>6순위: 원본 데이터 결합 실험.</strong> 기준선이 안정된 뒤 UCI 원본을 학습 폴드에만 추가하고 Kaggle 검증 폴드는 그대로 둡니다. 원본 추가 여부만 바꿔 효과를 확인합니다.</li>
+    <h2>현재 결론과 다음 실험</h2><article><ol>
+      <li><strong>확인:</strong> LightGBM 계열이 CatBoost와 XGBoost 기준선보다 높았고, E008이 현재 최고입니다.</li>
+      <li><strong>발견:</strong> 범주형 명시, 학습 상한, 리프 수, 행 샘플링은 개선됐지만 <code>min_child_samples=50</code>은 평균 AUC를 낮췄습니다.</li>
+      <li><strong>중요성:</strong> 단순 설정 조정만으로 얻은 개선은 제한적이며, 예측 상관도 높아 고정 혼합 이득도 작습니다.</li>
+      <li><strong>다음 1순위:</strong> 공개 강한 단일 모델과의 피처·검증 차이를 대조한 뒤, 근거가 있는 피처 가설 하나를 고정 fold에서 검증합니다.</li>
+      <li><strong>다음 2순위:</strong> UCI 원본을 쓸 경우 Kaggle 검증 fold는 그대로 두고 학습 fold에만 추가해 출처 차이를 확인합니다.</li>
+      <li><strong>현실 트랙:</strong> 실제 사전 타기팅 목적이라면 <code>duration</code> 없는 E002를 별도 기준선으로 개선해야 합니다.</li>
     </ol></article>
     <footer>분석 기준: 로컬 train.csv, test.csv, sample_submission.csv · 원문: <a href="https://www.kaggle.com/competitions/playground-series-s5e8/data" target="_blank" rel="noopener noreferrer">Kaggle 데이터 설명</a> · <a href="https://archive.ics.uci.edu/dataset/222/bank" target="_blank" rel="noopener noreferrer">UCI 변수 정의</a> · <a href="https://repositorio.biblioteca.iscte-iul.pt/bitstream/10071/9499/5/dss_v3.pdf" target="_blank" rel="noopener noreferrer">원 연구 논문</a> · 생성 스크립트: bank/src/eda_bank.py · 재현용 랜덤 시드: 326</footer></main></body></html>"""
 
@@ -352,7 +442,8 @@ def main() -> None:
     SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)
     DOCS_PATH.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY_PATH.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    DOCS_PATH.write_text(make_html(analysis) + "\n", encoding="utf-8")
+    rendered = "\n".join(line.rstrip() for line in make_html(analysis).splitlines()) + "\n"
+    DOCS_PATH.write_text(rendered, encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 
