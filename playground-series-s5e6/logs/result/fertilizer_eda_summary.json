@@ -1,0 +1,213 @@
+{
+  "train_shape": [
+    750000,
+    10
+  ],
+  "test_shape": [
+    250000,
+    9
+  ],
+  "target_counts": {
+    "14-35-14": 114436,
+    "10-26-26": 113887,
+    "17-17-17": 112453,
+    "28-28": 111158,
+    "20-20": 110889,
+    "DAP": 94860,
+    "Urea": 92317
+  },
+  "target_rates": {
+    "14-35-14": 0.15258133333333335,
+    "10-26-26": 0.15184933333333334,
+    "17-17-17": 0.14993733333333334,
+    "28-28": 0.14821066666666666,
+    "20-20": 0.147852,
+    "DAP": 0.12648,
+    "Urea": 0.12308933333333333
+  },
+  "frequency_prior_map3": 0.2784851111111111,
+  "missing_train": 0,
+  "cardinality": [
+    {
+      "feature": "Temparature",
+      "train_unique": 14,
+      "test_unique": 14
+    },
+    {
+      "feature": "Humidity",
+      "train_unique": 23,
+      "test_unique": 23
+    },
+    {
+      "feature": "Moisture",
+      "train_unique": 41,
+      "test_unique": 41
+    },
+    {
+      "feature": "Soil Type",
+      "train_unique": 5,
+      "test_unique": 5
+    },
+    {
+      "feature": "Crop Type",
+      "train_unique": 11,
+      "test_unique": 11
+    },
+    {
+      "feature": "Nitrogen",
+      "train_unique": 39,
+      "test_unique": 39
+    },
+    {
+      "feature": "Potassium",
+      "train_unique": 20,
+      "test_unique": 20
+    },
+    {
+      "feature": "Phosphorous",
+      "train_unique": 43,
+      "test_unique": 43
+    }
+  ],
+  "train_test_total_variation": [
+    {
+      "feature": "Humidity",
+      "total_variation": 0.005594666666666675
+    },
+    {
+      "feature": "Phosphorous",
+      "total_variation": 0.005438666666666661
+    },
+    {
+      "feature": "Nitrogen",
+      "total_variation": 0.005230666666666661
+    },
+    {
+      "feature": "Moisture",
+      "total_variation": 0.004730666666666671
+    },
+    {
+      "feature": "Crop Type",
+      "total_variation": 0.002956000000000014
+    },
+    {
+      "feature": "Temparature",
+      "total_variation": 0.002905333333333329
+    },
+    {
+      "feature": "Potassium",
+      "total_variation": 0.002877333333333336
+    },
+    {
+      "feature": "Soil Type",
+      "total_variation": 0.0016706666666666814
+    }
+  ],
+  "unseen_test_categories": {
+    "Soil Type": [],
+    "Crop Type": []
+  },
+  "single_feature_strength": [
+    {
+      "features": "Moisture",
+      "order": 1,
+      "in_sample_top1": 0.16619466666666666
+    },
+    {
+      "features": "Phosphorous",
+      "order": 1,
+      "in_sample_top1": 0.164264
+    },
+    {
+      "features": "Nitrogen",
+      "order": 1,
+      "in_sample_top1": 0.16377733333333333
+    },
+    {
+      "features": "Humidity",
+      "order": 1,
+      "in_sample_top1": 0.159404
+    },
+    {
+      "features": "Potassium",
+      "order": 1,
+      "in_sample_top1": 0.15940266666666666
+    },
+    {
+      "features": "Temparature",
+      "order": 1,
+      "in_sample_top1": 0.15878266666666666
+    },
+    {
+      "features": "Crop Type",
+      "order": 1,
+      "in_sample_top1": 0.15684533333333334
+    },
+    {
+      "features": "Soil Type",
+      "order": 1,
+      "in_sample_top1": 0.15579733333333334
+    }
+  ],
+  "pair_feature_strength_top10": [
+    {
+      "features": "Nitrogen + Phosphorous",
+      "order": 2,
+      "in_sample_top1": 0.188516
+    },
+    {
+      "features": "Moisture + Phosphorous",
+      "order": 2,
+      "in_sample_top1": 0.188092
+    },
+    {
+      "features": "Moisture + Nitrogen",
+      "order": 2,
+      "in_sample_top1": 0.18517733333333333
+    },
+    {
+      "features": "Potassium + Phosphorous",
+      "order": 2,
+      "in_sample_top1": 0.18000933333333333
+    },
+    {
+      "features": "Nitrogen + Potassium",
+      "order": 2,
+      "in_sample_top1": 0.17899066666666666
+    },
+    {
+      "features": "Moisture + Potassium",
+      "order": 2,
+      "in_sample_top1": 0.178348
+    },
+    {
+      "features": "Humidity + Phosphorous",
+      "order": 2,
+      "in_sample_top1": 0.17799333333333334
+    },
+    {
+      "features": "Humidity + Moisture",
+      "order": 2,
+      "in_sample_top1": 0.17708
+    },
+    {
+      "features": "Crop Type + Phosphorous",
+      "order": 2,
+      "in_sample_top1": 0.177072
+    },
+    {
+      "features": "Humidity + Nitrogen",
+      "order": 2,
+      "in_sample_top1": 0.17696666666666666
+    }
+  ],
+  "max_target_rate_delta_across_id_deciles": 0.004786666666666661,
+  "duplicate_feature_rows_train": 0,
+  "duplicate_rows_excluding_id_train": 0,
+  "exact_feature_matches_in_test": 0,
+  "source_sha256": {
+    "train.csv": "9c438cc6ac391aa8c0e85a652132142fad32515ebb3e0ae0a38c3472a0128b96",
+    "test.csv": "88996a96e5e09b820861c514c7d05d40f0c07061201483c93ec2ceccaf20e952",
+    "sample_submission.csv": "141d49296a4c5f433ce49f87ba04f76dbb6ace18b5fed759f8c149294c77d323"
+  }
+}
