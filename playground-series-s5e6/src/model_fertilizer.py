@@ -291,7 +291,10 @@ def align_probabilities(values: np.ndarray, source_classes: np.ndarray, target_c
     return aligned
 
 
-def target_encode(train_x, train_y, other_frames, classes, smoothing=20.0):
+def target_encode(
+    train_x, train_y, other_frames, classes, smoothing=20.0,
+    leave_one_out_first=False,
+):
     priors = train_y.value_counts(normalize=True).reindex(classes, fill_value=0).to_numpy()
     encoded = [pd.DataFrame(index=frame.index) for frame in other_frames]
     training = train_x.copy()
@@ -303,13 +306,27 @@ def target_encode(train_x, train_y, other_frames, classes, smoothing=20.0):
         totals = grouped.sum(axis=1).to_numpy()[:, None]
         rates = (grouped.to_numpy() + smoothing * priors[None, :]) / (totals + smoothing)
         rate_frame = pd.DataFrame(rates, index=grouped.index, columns=[f"te_{name}_{label}" for label in classes])
-        for result, frame in zip(encoded, other_frames):
+        for position, (result, frame) in enumerate(zip(encoded, other_frames)):
             if len(columns) == 1:
-                mapped = rate_frame.reindex(frame[columns[0]].to_numpy())
-                mapped.index = frame.index
+                keys = frame[columns[0]].to_numpy()
             else:
-                key = pd.MultiIndex.from_frame(frame[list(columns)])
-                mapped = rate_frame.reindex(key)
+                keys = pd.MultiIndex.from_frame(frame[list(columns)])
+            if position == 0 and leave_one_out_first:
+                if len(frame) != len(train_x) or not frame.index.equals(train_x.index):
+                    raise ValueError("The first target-encoding frame must be the training frame")
+                raw = grouped.reindex(keys, fill_value=0).to_numpy(dtype=float).copy()
+                target_values = train_y.to_numpy()
+                for class_index, label in enumerate(classes):
+                    raw[:, class_index] -= target_values == label
+                totals_without_self = raw.sum(axis=1)
+                values = (raw + smoothing * priors[None, :]) / (
+                    totals_without_self[:, None] + smoothing
+                )
+                mapped = pd.DataFrame(
+                    values, columns=[f"te_{name}_{label}" for label in classes], index=frame.index,
+                )
+            else:
+                mapped = rate_frame.reindex(keys)
                 mapped.index = frame.index
             mapped = mapped.fillna(dict(zip(mapped.columns, priors))).astype("float32")
             for column in mapped.columns:
@@ -321,6 +338,7 @@ def fit_catboost_te(train_x, train_y, valid_x, valid_y, test_x, seed, classes):
     encoded_train, encoded_valid, encoded_test = target_encode(
         train_x[BASE_FEATURES], train_y,
         [train_x[BASE_FEATURES], valid_x[BASE_FEATURES], test_x[BASE_FEATURES]], classes,
+        leave_one_out_first=True,
     )
     augmented_train = pd.concat([train_x.reset_index(drop=True), encoded_train.reset_index(drop=True)], axis=1)
     augmented_valid = pd.concat([valid_x.reset_index(drop=True), encoded_valid.reset_index(drop=True)], axis=1)

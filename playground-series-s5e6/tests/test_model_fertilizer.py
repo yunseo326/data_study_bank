@@ -91,6 +91,24 @@ def test_target_encoding_uses_only_supplied_training_rows():
     assert not np.allclose(encoded.to_numpy(), changed.to_numpy())
 
 
+def test_training_target_encoding_excludes_each_rows_own_label():
+    train_x = pd.DataFrame({
+        "Temparature": [25, 26], "Humidity": [50, 51], "Moisture": [30, 31],
+        "Soil Type": ["A", "B"], "Crop Type": ["X", "Y"], "Nitrogen": [4, 5],
+        "Potassium": [0, 1], "Phosphorous": [0, 1],
+    })
+    train_y = pd.Series(["F1", "F2"])
+    classes = np.array(["F1", "F2"], dtype=object)
+    encoded, = target_encode(
+        train_x, train_y, [train_x], classes, smoothing=20.0,
+        leave_one_out_first=True,
+    )
+    # Every feature value is unique, so removing the row itself leaves only the
+    # shared prior. Its own label must not produce a row-specific boost.
+    first_pair = encoded[["te_Temparature_F1", "te_Temparature_F2"]].to_numpy()
+    assert np.allclose(first_pair, np.array([[0.5, 0.5], [0.5, 0.5]]))
+
+
 def test_submission_requires_three_valid_distinct_labels():
     test = pd.DataFrame({"id": [10, 11]})
     classes = np.array(["A", "B", "C", "D"], dtype=object)
