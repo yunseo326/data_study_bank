@@ -10,6 +10,7 @@
 - 평가 지표: ROC AUC
 - 데이터 생성: 원본 Bank Marketing Dataset을 학습한 딥러닝 모델로 train/test를 생성
 - 외부 데이터: Kaggle 설명에 따르면 원본 Bank Marketing Dataset을 탐색하거나 학습에 결합할 수 있음
+- 변수 정의와 해석: [VARIABLES.md](VARIABLES.md)
 
 이 정보는 로컬 CSV만으로 확정할 수 없으므로 대회 원문을 분석 기준으로 사용합니다.
 
