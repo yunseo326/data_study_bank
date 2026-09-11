@@ -16,7 +16,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "bank" / "data"
 BENCHMARK_DIR = ROOT / "bank" / "benchmarks"
-DOCS_PATH = ROOT / "docs" / "bank" / "index.html"
+DOCS_PATH = ROOT / "bank" / "docs" / "index.html"
 SUMMARY_PATH = ROOT / "bank" / "logs" / "result" / "bank_eda_summary.json"
 MODEL_ANALYSIS_PATH = ROOT / "bank" / "logs" / "result" / "model_analysis.json"
 OUTPUT_DIR = ROOT / "bank" / "outputs"

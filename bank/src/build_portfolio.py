@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PAGES_DIR = ROOT / "docs"
 REPORTS = {
-    "bank": ROOT / "docs" / "bank" / "index.html",
+    "bank": ROOT / "bank" / "docs" / "index.html",
     "playground-series-s5e4": ROOT / "playground-series-s5e4" / "docs" / "index.html",
     "playground-series-s5e6": ROOT / "playground-series-s5e6" / "docs" / "index.html",
 }
@@ -41,7 +41,7 @@ def homepage_html() -> str:
     <a class="card" href="playground-series-s5e6/"><div class="tag">PLAYGROUND S5E6</div><h2>Optimal Fertilizers</h2><p>MAP@3 평가, 비료별 오류 차이와 누수 없는 범주형 모델링을 분석합니다.</p><span class="status">현재 OOF MAP@3 0.309568</span></a>
     <a class="card" href="bank/"><div class="tag">PLAYGROUND S5E8</div><h2>Bank Dataset</h2><p>예측 시점 누수, 고정 OOF 검증과 LightGBM 단일 변경 실험을 분석합니다.</p><span class="status">현재 OOF AUC 0.969283</span></a>
   </section>
-  <footer>원본 데이터는 로컬에만 보관하며 GitHub에는 분석 코드와 요약 결과만 공개합니다.</footer>
+  <footer><a href="https://yunseo326.github.io/">전체 프로젝트로 돌아가기</a> · 원본 데이터는 로컬에만 보관하며 GitHub에는 분석 코드와 요약 결과만 공개합니다.</footer>
 </main></body>
 </html>
 """

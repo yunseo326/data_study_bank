@@ -16,6 +16,7 @@ class PortfolioBuildTests(unittest.TestCase):
         self.assertIn('href="bank/"', page)
         self.assertIn('href="playground-series-s5e4/"', page)
         self.assertIn('href="playground-series-s5e6/"', page)
+        self.assertIn('href="https://yunseo326.github.io/"', page)
         self.assertIn("@media(max-width:620px)", page)
 
     def test_home_link_is_added_once(self):
@@ -53,7 +54,7 @@ class PortfolioBuildTests(unittest.TestCase):
             self.assertIn("전체 대회", published.read_text(encoding="utf-8"))
 
     def test_published_bank_report_explains_models_without_source_check_framing(self):
-        report = (ROOT.parent / "docs" / "bank" / "index.html").read_text(encoding="utf-8")
+        report = (ROOT.parent / "bank" / "docs" / "index.html").read_text(encoding="utf-8")
         self.assertIn("모델 개선 과정", report)
         self.assertIn("검증 설계와 신뢰도", report)
         self.assertIn("최고 모델 구성", report)
