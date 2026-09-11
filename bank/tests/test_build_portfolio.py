@@ -7,10 +7,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from build_portfolio import add_home_link, homepage_html, publish
+from build_portfolio import REPORTS, add_home_link, homepage_html, publish
 
 
 class PortfolioBuildTests(unittest.TestCase):
+    def test_report_sources_are_project_owned_not_published_copies(self):
+        for slug, source in REPORTS.items():
+            expected = ROOT.parent / slug / "docs" / "index.html"
+            self.assertEqual(source, expected)
+
     def test_homepage_links_all_three_competitions(self):
         page = homepage_html()
         self.assertIn('href="bank/"', page)
