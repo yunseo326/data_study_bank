@@ -30,9 +30,11 @@ python bank/src/model_bank.py --experiment E002
 python bank/src/model_bank.py --experiment E008
 python bank/src/analyze_models.py
 python bank/src/eda_bank.py
+python bank/src/build_portfolio.py
 ```
 
 OOF·test 예측과 제출 파일은 `bank/outputs/`에만 저장되며 Git에는 포함되지 않습니다.
+`eda_bank.py`는 Bank 전용 하위 보고서 `docs/bank/index.html`만 갱신하고, `build_portfolio.py`가 세 대회 보고서와 상위 Data Study 홈을 저장소 루트 `docs/`에 게시합니다.
 
 ## 모델링 프레임워크
 

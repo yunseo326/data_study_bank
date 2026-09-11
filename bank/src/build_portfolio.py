@@ -1,4 +1,21 @@
-<!doctype html>
+"""Assemble the three competition reports into the repository GitHub Pages tree."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+PAGES_DIR = ROOT / "docs"
+REPORTS = {
+    "bank": ROOT / "docs" / "bank" / "index.html",
+    "playground-series-s5e4": ROOT / "playground-series-s5e4" / "docs" / "index.html",
+    "playground-series-s5e6": ROOT / "playground-series-s5e6" / "docs" / "index.html",
+}
+
+
+def homepage_html() -> str:
+    return """<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -27,3 +44,46 @@
   <footer>원본 데이터는 로컬에만 보관하며 GitHub에는 분석 코드와 요약 결과만 공개합니다.</footer>
 </main></body>
 </html>
+"""
+
+
+def add_home_link(report: str) -> str:
+    if 'aria-label="Data Study 전체 대회"' in report or 'href="../">전체 대회' in report:
+        return report
+    link = (
+        '<a href="../" aria-label="Data Study 전체 대회" '
+        'style="position:fixed;z-index:20;top:12px;right:16px;padding:8px 12px;'
+        'border-radius:999px;background:#fff;color:#176b9c;text-decoration:none;'
+        'font:700 13px/1.2 system-ui;box-shadow:0 3px 14px rgba(16,39,63,.16)">'
+        '← 전체 대회</a>'
+    )
+    return report.replace("<body>", "<body>" + link, 1)
+
+
+def publish(pages_dir: Path = PAGES_DIR, reports: dict[str, Path] = REPORTS) -> None:
+    selected_reports = {}
+    missing = []
+    for slug, source in reports.items():
+        published = pages_dir / slug / "index.html"
+        if source.exists():
+            selected_reports[slug] = source
+        elif published.exists():
+            selected_reports[slug] = published
+        else:
+            missing.append(str(source))
+    if missing:
+        raise FileNotFoundError("Missing competition report(s): " + ", ".join(missing))
+    report_contents = {
+        slug: source.read_text(encoding="utf-8") for slug, source in selected_reports.items()
+    }
+    pages_dir.mkdir(parents=True, exist_ok=True)
+    (pages_dir / "index.html").write_text(homepage_html(), encoding="utf-8")
+    for slug, report in report_contents.items():
+        destination = pages_dir / slug / "index.html"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(add_home_link(report).rstrip() + "\n", encoding="utf-8")
+        print(f"published {slug}: {selected_reports[slug]} -> {destination}")
+
+
+if __name__ == "__main__":
+    publish()
