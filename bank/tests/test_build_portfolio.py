@@ -52,6 +52,16 @@ class PortfolioBuildTests(unittest.TestCase):
             self.assertIn("existing bank", published.read_text(encoding="utf-8"))
             self.assertIn("전체 대회", published.read_text(encoding="utf-8"))
 
+    def test_published_bank_report_explains_models_without_source_check_framing(self):
+        report = (ROOT.parent / "docs" / "bank" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("모델 개선 과정", report)
+        self.assertIn("검증 설계와 신뢰도", report)
+        self.assertIn("최고 모델 구성", report)
+        self.assertIn("최고 모델 진단", report)
+        self.assertNotIn("원문으로 보완된", report)
+        self.assertNotIn("공식 변수 사전", report)
+        self.assertNotIn("UCI 공식 정의에 따르면", report)
+
 
 if __name__ == "__main__":
     unittest.main()

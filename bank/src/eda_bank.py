@@ -19,12 +19,13 @@ BENCHMARK_DIR = ROOT / "bank" / "benchmarks"
 DOCS_PATH = ROOT / "docs" / "bank" / "index.html"
 SUMMARY_PATH = ROOT / "bank" / "logs" / "result" / "bank_eda_summary.json"
 MODEL_ANALYSIS_PATH = ROOT / "bank" / "logs" / "result" / "model_analysis.json"
+OUTPUT_DIR = ROOT / "bank" / "outputs"
 RNG = np.random.default_rng(326)
 
 DATA_DICTIONARY = [
     {"변수": "age", "구분": "고객", "공식 의미": "고객 나이", "해석 주의": "비선형 효과와 연령대별 표본 수를 함께 확인"},
     {"변수": "job", "구분": "고객", "공식 의미": "직업 유형", "해석 주의": "unknown은 직업 정보가 없는 상태"},
-    {"변수": "marital", "구분": "고객", "공식 의미": "결혼 상태", "해석 주의": "원본의 divorced는 이혼과 사별을 함께 포함"},
+    {"변수": "marital", "구분": "고객", "공식 의미": "결혼 상태", "해석 주의": "divorced는 이혼과 사별을 함께 포함"},
     {"변수": "education", "구분": "고객", "공식 의미": "교육 수준", "해석 주의": "선형 순서를 가정하지 않고 unknown을 유지"},
     {"변수": "default", "구분": "고객", "공식 의미": "신용 채무불이행 여부", "해석 주의": "희소 범주의 표본 수와 양성률을 함께 확인"},
     {"변수": "balance", "구분": "고객", "공식 의미": "연평균 잔액(유로)", "해석 주의": "음수와 큰 양수 값이 있어 일반 로그 변환에 부적합"},
@@ -273,6 +274,37 @@ def make_html(a: dict) -> str:
     kaggle_track_text = "대기" if kaggle_track is None else f"{kaggle_track:.6f}"
     realistic_track_text = "대기" if realistic_track is None else f"{realistic_track:.6f}"
     duration_gap_text = "두 실험 완료 후 계산" if kaggle_track is None or realistic_track is None else f"{kaggle_track - realistic_track:+.6f} AUC"
+
+    best_id = str(best["experiment_id"])
+    best_score = float(best["cv_auc_num"]) if not pd.isna(best["cv_auc_num"]) else None
+    initial_lgbm = score_by_id.get("E001-LIGHTGBM")
+    goal_gap = None if best_score is None else max(0.0, 0.970 - best_score)
+    catboost_gain = None if best_score is None or kaggle_track is None else best_score - kaggle_track
+    tuning_gain = None if best_score is None or initial_lgbm is None else best_score - initial_lgbm
+
+    fold_scores = [float(value) for value in str(best.get("fold_scores", "")).split("|") if value]
+    best_iterations: list[int | str] = ["—"] * len(fold_scores)
+    metrics_path = OUTPUT_DIR / best_id / "metrics.json"
+    if metrics_path.exists():
+        metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+        best_iterations = metrics.get("best_iterations", best_iterations)
+    fold_frame = pd.DataFrame({
+        "Fold": [f"Fold {index}" for index in range(1, len(fold_scores) + 1)],
+        "OOF AUC": fold_scores,
+        "최적 반복": best_iterations,
+    })
+    fold_html = dataframe_table(fold_frame) if len(fold_frame) else "<p>Fold별 기록이 없습니다.</p>"
+
+    model_config = pd.DataFrame([
+        {"설정": "모델", "값": "LightGBM", "의미": "비선형 관계와 범주 간 상호작용을 트리 분할로 학습"},
+        {"설정": "입력 변수", "값": "16개 전체", "의미": "Kaggle 점수 트랙이므로 duration 포함"},
+        {"설정": "범주형 처리", "값": "native categorical", "의미": "임의 숫자 순서 없이 범주 정보를 직접 사용"},
+        {"설정": "학습률 / 최대 트리", "값": "0.04 / 3,000", "의미": "작은 보폭으로 충분히 학습하되 각 fold에서 조기 종료"},
+        {"설정": "리프 / 최소 표본", "값": "63 / 20", "의미": "복잡한 패턴을 허용하면서 지나치게 작은 잎은 제한"},
+        {"설정": "행 / 열 샘플링", "값": "0.8 / 0.8", "의미": "트리마다 일부 행과 변수를 사용해 과적합을 완화"},
+        {"설정": "L2 규제", "값": "2.0", "의미": "분할의 극단적인 예측을 완화"},
+    ])
+    model_config_html = dataframe_table(model_config)
     experiment_rows = []
     for _, row in our_experiments.iloc[::-1].iterrows():
         score_value = row["cv_auc_num"]
@@ -297,6 +329,9 @@ def make_html(a: dict) -> str:
     if MODEL_ANALYSIS_PATH.exists():
         model_analysis = json.loads(MODEL_ANALYSIS_PATH.read_text(encoding="utf-8"))
         importance = model_analysis.get("feature_importance", [])[:10]
+        duration_gain_share = next(
+            (float(row["gain_share"]) for row in importance if row["feature"] == "duration"), 0.0
+        )
         importance_html = bar_list([
             (row["feature"], float(row["gain_share"])) for row in importance
         ]) if importance else "<p>새 실험의 피처 중요도 기록이 없습니다.</p>"
@@ -317,8 +352,11 @@ def make_html(a: dict) -> str:
                 "left": "모델 A", "right": "모델 B", "weight": "가중치", "oof_auc": "OOF AUC",
             })
             blend_html = dataframe_table(blends)
+            best_blend_score = float(blends["OOF AUC"].max())
+            blend_gain = best_blend_score - float(model_analysis["best_oof_auc"])
         else:
             blend_html = "<p>비교할 OOF 조합이 없습니다.</p>"
+            blend_gain = 0.0
 
         correlations = pd.DataFrame(model_analysis.get("prediction_correlations", []))
         if len(correlations):
@@ -330,13 +368,15 @@ def make_html(a: dict) -> str:
             correlation_html = "<p>예측 상관 진단이 없습니다.</p>"
 
         model_diagnostics_html = f"""
-        <h2>최고 모델을 어떻게 해석할까</h2><section class="grid two">
-          <article><h3>피처 중요도 · gain 비중</h3><p class="note">{esc(model_analysis['best_experiment'])}의 5개 fold 평균입니다. 모델이 분할에서 얻은 이득이지 인과효과는 아닙니다.</p>{importance_html}</article>
-          <article><h3>성능이 낮은 고객군</h3><p class="note">표본 1,000개 이상인 그룹 중 AUC가 낮은 순서입니다. 양성률이 매우 높은 작은 월은 전체보다 순위 구분이 어렵습니다.</p>{weak_html}</article>
-          <article><h3>모델 예측 상관</h3><p class="note">상관이 1에 가까울수록 같은 고객을 비슷하게 평가합니다. 높은 상관은 혼합의 추가 이득이 작을 수 있음을 뜻합니다.</p>{correlation_html}</article>
-          <article><h3>고정 50:50 혼합</h3><p class="note">OOF에서 가중치를 탐색하지 않은 진단용 비교입니다. 단일 모델 0.970 목표와는 별도로 봅니다.</p>{blend_html}</article>
+        <h2>최고 모델 진단</h2><section class="grid two">
+          <article><h3>무엇을 보고 예측했나</h3><p><code>duration</code>이 전체 gain의 <strong>{duration_gain_share:.1%}</strong>를 차지했습니다. 현재 점수의 상당 부분이 통화가 끝난 뒤 알게 되는 시간 정보에서 옵니다.</p><p class="note">{esc(model_analysis['best_experiment'])}의 5개 fold 평균입니다. gain은 모델이 분할에서 얻은 이득이며 인과효과가 아닙니다.</p>{importance_html}</article>
+          <article><h3>어디에서 순위 구분이 어려웠나</h3><p>12월, 3월, 10월처럼 표본이 작거나 가입률이 높은 월과 이전 캠페인 성공 고객군에서 그룹 내부 AUC가 낮았습니다. 이미 가입 가능성이 전반적으로 높은 집단에서는 고객 간 미세한 순서를 구분하기가 더 어렵다는 뜻입니다.</p><p class="note">표본 1,000개 이상인 그룹만 비교했습니다. 그룹 AUC가 낮다고 전체 모델이 그 그룹을 낮게 평가한다는 뜻은 아닙니다.</p>{weak_html}</article>
+          <article><h3>왜 단순 앙상블 효과가 작았나</h3><p>기준 모델들의 OOF 예측 상관이 매우 높아 같은 고객을 비슷한 순서로 평가했습니다. 모델 이름은 달라도 오류가 충분히 다르지 않으면 평균을 내도 새 정보가 거의 생기지 않습니다.</p>{correlation_html}</article>
+          <article><h3>고정 50:50 혼합 결과</h3><p>가장 좋은 고정 혼합도 최고 단일 모델보다 <strong>{blend_gain:+.6f}</strong> AUC 개선에 그쳤습니다. 현재 병목은 혼합 비율보다 새로운 정보나 다른 오류 구조를 만드는 데 있습니다.</p><p class="note">가중치를 탐색하지 않은 진단용 비교이며 단일 모델 0.970 목표와는 별도로 봅니다.</p>{blend_html}</article>
         </section>"""
-    dictionary_html = dataframe_table(pd.DataFrame(DATA_DICTIONARY)).replace(
+    dictionary_html = dataframe_table(
+        pd.DataFrame(DATA_DICTIONARY).rename(columns={"공식 의미": "의미"})
+    ).replace(
         "<table>", '<table class="dictionary">'
     )
 
@@ -372,30 +412,44 @@ def make_html(a: dict) -> str:
     <p class="lead">데이터 품질과 누수 위험을 확인하고, 고정된 OOF 검증에서 한 요소씩 바꾼 실험 결과를 정리했습니다. 원본 CSV는 변경하지 않았습니다.</p>
     <section class="grid"><div class="card"><div class="metric">{fmt_int(len(train))}</div><div class="label">학습 행</div></div><div class="card"><div class="metric">{fmt_int(len(test))}</div><div class="label">테스트 행</div></div><div class="card"><div class="metric">{len(a['features'])}</div><div class="label">예측 변수</div></div><div class="card"><div class="metric">{fmt_pct(a['target_rate'])}</div><div class="label">타깃 y=1 비율</div></div></section>
 
-    <h2>우리 모델은 어느 수준인가</h2><section class="grid two">
+    <h2>모델링 결과 한눈에 보기</h2><section class="grid two">
       <article class="finding {current_class}"><h3>{current_title}</h3><div class="score-empty">{current_score}</div><div class="status-line"><span class="pill">EDA 완료</span><span class="pill">{current_status}</span></div><p class="note">{current_note}</p></article>
-      <article><h3>평가 원칙</h3><ol class="rule-list"><li>주지표는 같은 분할에서 계산한 OOF ROC AUC</li><li>Public LB는 검증이 실제 테스트에도 이어지는지 확인하는 보조 지표</li><li>단일 모델은 단일 모델끼리 비교</li><li>점수와 함께 모델 수·외부 데이터·학습 비용을 기록</li></ol></article>
+      <article><h3>현재 결론</h3><p>초기 CatBoost보다 LightGBM이 크게 앞섰고, LightGBM 안에서는 학습량·리프 수·행 샘플링을 차례로 바꿔 점수를 올렸습니다. 현재 최고는 <strong>E008 LightGBM 0.969283</strong>이며 목표 0.970까지 <strong>{goal_gap:.6f}</strong> 남았습니다.</p><p class="note">Kaggle 제출 점수는 아직 없으므로 보고하지 않습니다. 현재 비교는 모두 동일한 로컬 OOF 기준입니다.</p></article>
     </section>
-    <section class="grid" style="margin-top:14px"><div class="card"><div class="metric">{kaggle_track_text}</div><div class="label">Kaggle 점수 트랙 · E001</div></div><div class="card"><div class="metric">{realistic_track_text}</div><div class="label">통화 전 현실 트랙 · E002</div></div><div class="card"><div class="metric">{duration_gap_text}</div><div class="label">duration이 만든 검증 격차</div></div><div class="card"><div class="metric">0.970</div><div class="label">현재 1차 통과 목표</div></div></section>
-    <article style="margin-top:14px"><h3>우리 실험 기록</h3>{experiment_table}<p class="note">기준 대비 값은 같은 고정 폴드에서 선언된 기준 실험과 비교합니다. 한 번에 한 요소만 바꾼 경우에만 원인을 해석합니다.</p></article>
+    <section class="grid" style="margin-top:14px"><div class="card"><div class="metric">{kaggle_track_text}</div><div class="label">초기 CatBoost · E001</div></div><div class="card"><div class="metric">{initial_lgbm:.6f}</div><div class="label">초기 LightGBM</div></div><div class="card"><div class="metric">{catboost_gain:+.6f}</div><div class="label">CatBoost 대비 현재 개선</div></div><div class="card"><div class="metric">{tuning_gain:+.6f}</div><div class="label">LightGBM 내부 개선</div></div></section>
+
+    <h2>모델 개선 과정</h2><section class="grid two">
+      <article class="finding good"><h3>가장 큰 선택 · 모델 계열</h3><p>같은 16개 변수와 같은 fold에서 초기 LightGBM은 <strong>0.968502</strong>로 CatBoost <strong>0.963737</strong>보다 <strong>+0.004765</strong> 높았습니다. 이번 데이터에서는 범주형 전용 모델의 기본 설정 이점보다 LightGBM의 트리 성장 방식이 더 잘 맞았습니다.</p><p class="note">모델 계열 변경의 효과가 이후 개별 하이퍼파라미터 조정보다 훨씬 컸습니다.</p></article>
+      <article class="finding"><h3>가장 큰 조정 · 학습 상한</h3><p>E004에서 최대 트리를 1,500개에서 3,000개로 늘린 E005가 <strong>+0.000444</strong> 개선됐습니다. 조기 종료가 각 fold의 적정 시점을 고르므로, 기존 상한이 학습을 너무 일찍 막았던 것으로 해석됩니다.</p></article>
+      <article class="finding"><h3>복잡도와 샘플링</h3><p>리프 수를 31에서 63으로 늘린 E006은 <strong>+0.000135</strong>, 매 트리마다 80%의 행을 다시 뽑게 한 E008은 E006 대비 <strong>+0.000115</strong> 개선됐습니다. 더 세밀한 상호작용과 약한 무작위성이 모두 도움이 됐습니다.</p></article>
+      <article class="finding risk"><h3>채택하지 않은 변경</h3><p><code>min_child_samples</code>를 20에서 50으로 높인 E007은 E006보다 <strong>-0.000040</strong> 낮았습니다. 잎을 지나치게 크게 제한해 소수 패턴을 놓친 것으로 보고 되돌렸습니다.</p></article>
+    </section>
+
+    <h2>검증 설계와 신뢰도</h2><section class="grid two">
+      <article><h3>어떻게 비교했나</h3><ol class="rule-list"><li>타깃 비율을 유지하는 shuffled Stratified 5-fold, seed 326</li><li>각 fold 약 60만 행으로 학습하고 약 15만 행으로 검증</li><li>범주 인코딩과 모델 학습은 검증 데이터를 보지 않고 fold 안에서 수행</li><li>모든 실험을 같은 fold의 OOF ROC AUC로 비교</li><li>평균뿐 아니라 fold 표준편차로 흔들림 확인</li></ol><p class="note">E008 fold 표준편차는 0.000199로 작아 특정 fold 하나가 평균을 끌어올린 결과는 아닙니다.</p></article>
+      <article><h3>{best_id} fold별 결과</h3>{fold_html}<p class="note">전체 학습 시간은 약 {float(best['runtime_minutes']):.2f}분입니다. 최적 반복 수가 fold마다 다른 것은 조기 종료가 각 학습/검증 조합에 맞는 지점을 선택했기 때문입니다.</p></article>
+    </section>
+    <article style="margin-top:14px"><h3>최고 모델 구성</h3>{model_config_html}<p class="note">설정값은 성능의 원인이 아니라 검증으로 선택된 현재 상태입니다. 이후 실험에서도 한 항목만 바꿔 영향의 원인을 분리합니다.</p></article>
+
+    <h2>전체 실험 기록</h2><article>{experiment_table}<p class="note">기준 대비 값은 같은 고정 fold에서 선언된 기준 실험과 비교합니다. 한 번에 한 요소만 바꾼 경우에만 원인을 해석합니다.</p></article>
     {model_diagnostics_html}
     <article style="margin-top:14px"><h3>공개 모델 벤치마크</h3>{benchmark_table}<p class="note">선택한 공개 자료의 보고값입니다. 서로 다른 검증 분할에서 나온 CV는 완전히 같은 조건의 순위표가 아니므로, 절대 순위보다 도달 가능한 수준을 판단하는 기준으로 사용합니다.</p></article>
     <section class="grid two" style="margin-top:14px"><article><h3>단일 모델 목표</h3><p><strong>1차 통과:</strong> CV 0.970<br><strong>강한 기준:</strong> CV 0.974<br><strong>상위 단일 모델권:</strong> CV 0.976 전후</p><p class="note">첫 목표는 복잡한 앙상블이 아니라 재현 가능한 단일 모델입니다.</p></article><article><h3>앙상블 목표</h3><p><strong>경쟁력 있는 수준:</strong> CV 0.9765 이상<br><strong>공개 상위권 사례:</strong> CV 0.9773 전후</p><p class="note">단일 모델의 가설 실험이 끝난 뒤에만 비교합니다. 수십~수백 모델 앙상블과 첫 기준선을 직접 비교하지 않습니다.</p></article></section>
 
     <h2>먼저 알아야 할 결론</h2><section class="grid two">
-      <article class="finding risk"><h3>duration은 점수용과 현실용을 분리합니다</h3><p>공식 정의는 ‘마지막 연락 통화시간(초)’입니다. <code>duration</code>은 타깃과의 단변량 연관성이 가장 크지만 통화가 끝난 뒤에야 확정됩니다. 따라서 Kaggle 점수 모델에는 포함하고, 통화 전 고객 선별 모델에서는 제외해 별도 평가합니다. 사전 예측에서 제외해야 한다는 판단은 공식 정의에 근거한 예측 시점 해석입니다.</p></article>
+      <article class="finding risk"><h3>duration은 점수용과 현실용을 분리합니다</h3><p><code>duration</code>은 마지막 연락의 통화시간이며 타깃과의 단변량 연관성이 가장 큽니다. 하지만 통화가 끝난 뒤에야 확정되므로 Kaggle 점수 모델에는 포함하고, 통화 전 고객 선별 모델에서는 제외해 별도 평가합니다.</p></article>
       <article class="finding warning"><h3>unknown은 정보 없음 범주입니다</h3><p>실제 NaN은 없지만 범주형 변수에 <code>unknown</code>이 {fmt_int(unknown_total)}건 있습니다. 이를 문자 그대로의 결측치로 바꾸거나 최빈값으로 덮지 않고, ‘정보를 알 수 없음’이라는 명시적 범주로 유지합니다.</p></article>
-      <article class="finding warning"><h3>pdays=-1은 이전 연락 없음입니다</h3><p>UCI 공식 정의에 따르면 <code>pdays=-1</code>은 ‘이전에 연락한 적 없음’입니다. 해당 상태는 {fmt_int(pdays_minus_one)}행({fmt_pct(pdays_minus_one_rate)})이며, 경과일 수치와 상태 표시를 분리해 실험할 가치가 있습니다.</p></article>
-      <article class="finding good"><h3>Kaggle train/test 이동은 작습니다</h3><p>각 수치형의 KS 통계량과 범주형의 총변동거리를 비교했으며 가장 큰 값은 {a['drift'].iloc[0]['변수']} {a['drift'].iloc[0]['차이 통계량']:.3f}입니다. 무작위 층화 검증을 시작점으로 쓸 수 있지만, 이 결과가 별도 출처인 UCI 원본 데이터와의 호환성까지 보장하지는 않습니다.</p></article>
+      <article class="finding warning"><h3>pdays=-1은 이전 연락 없음입니다</h3><p><code>pdays=-1</code>은 ‘이전에 연락한 적 없음’을 뜻합니다. 해당 상태는 {fmt_int(pdays_minus_one)}행({fmt_pct(pdays_minus_one_rate)})이며, 경과일 수치와 상태 표시를 분리해 실험할 가치가 있습니다.</p></article>
+      <article class="finding good"><h3>Kaggle train/test 이동은 작습니다</h3><p>각 수치형의 KS 통계량과 범주형의 총변동거리를 비교했으며 가장 큰 값은 {a['drift'].iloc[0]['변수']} {a['drift'].iloc[0]['차이 통계량']:.3f}입니다. 따라서 무작위 층화 검증을 시작점으로 사용할 수 있습니다. 다만 외부 데이터를 추가할 때는 별도로 분포 차이를 검증해야 합니다.</p></article>
     </section>
 
-    <h2>공식 변수 사전</h2><article><p class="note">Kaggle은 UCI Bank Marketing 원본을 학습한 모델로 합성 데이터를 만들었습니다. 아래는 UCI의 변수 정의를 기준으로 하되, 합성 데이터에서 그대로 단정하면 안 되는 해석을 함께 적었습니다.</p>{dictionary_html}</article>
+    <h2>변수 사전</h2><article><p class="note">이 데이터는 은행의 전화 마케팅을 통해 고객이 정기예금에 가입할 가능성을 예측합니다. 변수의 업무상 의미와 모델링할 때 주의할 점을 함께 정리했습니다.</p>{dictionary_html}</article>
 
-    <h2>원문으로 보완된 해석</h2><section class="grid two">
+    <h2>변수 해석과 모델링 주의</h2><section class="grid two">
       <article class="finding warning"><h3>day와 month는 마지막 연락 시점입니다</h3><p><code>day</code>는 요일이 아니라 월중 일자이고, <code>month</code>는 마지막 연락 월입니다. 월별 양성률 차이는 고객 선호뿐 아니라 계절성과 은행의 캠페인 대상 선정이 섞인 연관성입니다. 연도 정보가 없어 두 변수만으로 신뢰할 만한 시간순 검증을 만들기 어렵습니다.</p></article>
       <article class="finding warning"><h3>campaign은 마지막 연락을 포함합니다</h3><p><code>campaign</code>은 현 캠페인에서 해당 고객에게 연락한 횟수이며 마지막 연락도 포함합니다. ‘첫 전화 전에 예측’하는지 ‘현재 통화 후 예측’하는지에 따라 사용할 수 있는 값이 달라지므로 모델 목적을 먼저 고정해야 합니다.</p></article>
       <article class="finding"><h3>balance는 유로 단위 연평균 잔액입니다</h3><p>단순 현재 잔액이 아닙니다. 음수와 큰 양수가 함께 있으므로 일반 로그 변환은 바로 적용할 수 없습니다. 트리 모델의 원값 기준선을 먼저 만들고, 필요하면 부호를 보존하는 변환만 한 변수 실험으로 비교합니다.</p></article>
-      <article class="finding risk"><h3>원본 데이터는 학습 폴드에만 추가합니다</h3><p>Kaggle train/test는 합성 데이터이므로 UCI 원본을 섞을 때도 검증 폴드는 Kaggle train으로 유지합니다. 원본 행은 각 학습 폴드에만 추가하고, 출처별 분포와 성능을 함께 확인해야 실제 Kaggle 테스트에 도움이 되는지 판단할 수 있습니다.</p></article>
+      <article class="finding risk"><h3>외부 데이터는 학습 폴드에만 추가합니다</h3><p>Kaggle train/test는 합성 데이터이므로 외부의 실제 은행 마케팅 데이터를 섞더라도 검증 폴드는 Kaggle train으로 유지합니다. 외부 행은 각 학습 폴드에만 추가하고, 데이터 집단별 분포와 성능을 함께 확인해야 실제 Kaggle 테스트에 도움이 되는지 판단할 수 있습니다.</p></article>
     </section>
 
     <h2>데이터 품질 점검</h2><section class="grid two"><article><h3>중복과 분할 겹침</h3>
@@ -417,10 +471,10 @@ def make_html(a: dict) -> str:
       <li><strong>발견:</strong> 범주형 명시, 학습 상한, 리프 수, 행 샘플링은 개선됐지만 <code>min_child_samples=50</code>은 평균 AUC를 낮췄습니다.</li>
       <li><strong>중요성:</strong> 단순 설정 조정만으로 얻은 개선은 제한적이며, 예측 상관도 높아 고정 혼합 이득도 작습니다.</li>
       <li><strong>다음 1순위:</strong> 공개 강한 단일 모델과의 피처·검증 차이를 대조한 뒤, 근거가 있는 피처 가설 하나를 고정 fold에서 검증합니다.</li>
-      <li><strong>다음 2순위:</strong> UCI 원본을 쓸 경우 Kaggle 검증 fold는 그대로 두고 학습 fold에만 추가해 출처 차이를 확인합니다.</li>
+      <li><strong>다음 2순위:</strong> 외부 은행 마케팅 데이터를 쓸 경우 Kaggle 검증 fold는 그대로 두고 학습 fold에만 추가해 데이터 집단 차이를 확인합니다.</li>
       <li><strong>현실 트랙:</strong> 실제 사전 타기팅 목적이라면 <code>duration</code> 없는 E002를 별도 기준선으로 개선해야 합니다.</li>
     </ol></article>
-    <footer>분석 기준: 로컬 train.csv, test.csv, sample_submission.csv · 원문: <a href="https://www.kaggle.com/competitions/playground-series-s5e8/data" target="_blank" rel="noopener noreferrer">Kaggle 데이터 설명</a> · <a href="https://archive.ics.uci.edu/dataset/222/bank" target="_blank" rel="noopener noreferrer">UCI 변수 정의</a> · <a href="https://repositorio.biblioteca.iscte-iul.pt/bitstream/10071/9499/5/dss_v3.pdf" target="_blank" rel="noopener noreferrer">원 연구 논문</a> · 생성 스크립트: bank/src/eda_bank.py · 재현용 랜덤 시드: 326</footer></main></body></html>"""
+    <footer>분석 기준: 로컬 train.csv, test.csv, sample_submission.csv · 참고 자료: <a href="https://www.kaggle.com/competitions/playground-series-s5e8/data" target="_blank" rel="noopener noreferrer">Kaggle 데이터 설명</a> · <a href="https://archive.ics.uci.edu/dataset/222/bank" target="_blank" rel="noopener noreferrer">변수 설명</a> · <a href="https://repositorio.biblioteca.iscte-iul.pt/bitstream/10071/9499/5/dss_v3.pdf" target="_blank" rel="noopener noreferrer">연구 배경</a> · 생성 스크립트: bank/src/eda_bank.py · 재현용 랜덤 시드: 326</footer></main></body></html>"""
 
 
 def main() -> None:
