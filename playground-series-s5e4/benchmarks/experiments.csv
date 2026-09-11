@@ -1,0 +1,6 @@
+﻿experiment_id,date,purpose,baseline_id,changed_element,model,features,validation,seed,cv_rmse,fold_std,fold_scores,public_lb,runtime_minutes,status,interpretation
+B000,2026-09-11,평균 예측 최저 기준,,학습 fold 타깃 평균,mean,base (10),shuffled 5-Fold OOF RMSE,326,27.138370,0.029575,27.087253|27.173873|27.138760|27.159820|27.132065,,0.04,완료,피처를 사용하지 않는 문제 난이도 기준
+B001,2026-09-11,에피소드 길이 구조 기준,B000,길이와 길이 결측 플래그 사용,linear_length,base (10),shuffled 5-Fold OOF RMSE,326,13.543573,0.032903,13.532531|13.537456|13.603575|13.502982|13.541121,,0.05,완료,가장 강한 단일 변수 관계를 선형식으로 측정
+B002,2026-09-11,전체 원본 피처 기준선,B001,ID를 제외한 원본 피처 전체,catboost,base (10),shuffled 5-Fold OOF RMSE,326,13.049999,0.028105,13.037341|13.038152|13.099421|13.016343|13.058589,,26.33,완료,범주형과 결측을 직접 처리하는 강한 단일 모델 기준선
+E101,2026-09-11,에피소드 길이 이상값 처리,B002,Episode_Length_minutes 범위 이탈만 결측 처리,catboost,clean_length (10),shuffled 5-Fold OOF RMSE,326,13.052363,0.028921,13.036245|13.047608|13.098389|13.012679|13.066732,,22.08,완료,극단 길이가 검증 오차에 미치는 영향 분리
+P001,2026-09-11,예측 범위 제한,B002,예측값을 0~120분으로 제한,postprocess,reuse B002,same OOF predictions,326,13.049970,0.028085,13.037325|13.038141|13.099348|13.016324|13.058559,,0.00,완료,RMSE에서 불가능한 극단 예측이 주는 손실을 확인

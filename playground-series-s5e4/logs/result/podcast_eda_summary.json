@@ -1,0 +1,145 @@
+{
+  "dataset": {
+    "train_rows": 750000,
+    "test_rows": 250000,
+    "feature_count": 10,
+    "numeric": [
+      "Episode_Length_minutes",
+      "Host_Popularity_percentage",
+      "Guest_Popularity_percentage",
+      "Number_of_Ads"
+    ],
+    "categorical": [
+      "Podcast_Name",
+      "Episode_Title",
+      "Genre",
+      "Publication_Day",
+      "Publication_Time",
+      "Episode_Sentiment"
+    ],
+    "schema_ok": true,
+    "submission_ok": true
+  },
+  "target": {
+    "count": 750000.0,
+    "mean": 45.43740628813333,
+    "std": 27.138305827971262,
+    "min": 0.0,
+    "1%": 0.0,
+    "5%": 6.07879,
+    "25%": 23.17835,
+    "50%": 43.37946,
+    "75%": 64.81158,
+    "95%": 93.67793,
+    "99%": 109.39634,
+    "max": 119.97
+  },
+  "missing": [
+    {
+      "변수": "Episode_Length_minutes",
+      "train 결측": 87093,
+      "train 결측률": 0.116124,
+      "test 결측": 28736,
+      "test 결측률": 0.114944
+    },
+    {
+      "변수": "Guest_Popularity_percentage",
+      "train 결측": 146030,
+      "train 결측률": 0.19470666666666667,
+      "test 결측": 48832,
+      "test 결측률": 0.195328
+    },
+    {
+      "변수": "Number_of_Ads",
+      "train 결측": 1,
+      "train 결측률": 1.3333333333333334e-06,
+      "test 결측": 0,
+      "test 결측률": 0.0
+    }
+  ],
+  "anomalies": [
+    {
+      "검사": "에피소드 길이 범위 이탈",
+      "train": 9,
+      "test": 4
+    },
+    {
+      "검사": "호스트 인기도 범위 이탈",
+      "train": 25,
+      "test": 12
+    },
+    {
+      "검사": "게스트 인기도 범위 이탈",
+      "train": 19,
+      "test": 5
+    },
+    {
+      "검사": "광고 수 범위·정수 이탈",
+      "train": 9,
+      "test": 2
+    }
+  ],
+  "correlations": {
+    "Episode_Length_minutes": 0.9167488260717257,
+    "Number_of_Ads": -0.11833716446242956,
+    "Host_Popularity_percentage": 0.050869677844358585,
+    "Guest_Popularity_percentage": -0.016014221982548836
+  },
+  "duplicates": {
+    "train": 0,
+    "test": 0,
+    "cross_split_matches": 0
+  },
+  "drift": [
+    {
+      "변수": "Episode_Title",
+      "기준": "TV",
+      "차이": 0.009596000000000002
+    },
+    {
+      "변수": "Podcast_Name",
+      "기준": "TV",
+      "차이": 0.005599999999999996
+    },
+    {
+      "변수": "Host_Popularity_percentage",
+      "기준": "KS",
+      "차이": 0.003969999999999918
+    },
+    {
+      "변수": "Episode_Length_minutes",
+      "기준": "KS",
+      "차이": 0.0038000000000000256
+    },
+    {
+      "변수": "Genre",
+      "기준": "TV",
+      "차이": 0.003217333333333329
+    },
+    {
+      "변수": "Guest_Popularity_percentage",
+      "기준": "KS",
+      "차이": 0.0028199999999999337
+    },
+    {
+      "변수": "Number_of_Ads",
+      "기준": "KS",
+      "차이": 0.0019199999999999773
+    },
+    {
+      "변수": "Publication_Day",
+      "기준": "TV",
+      "차이": 0.0018920000000000187
+    },
+    {
+      "변수": "Publication_Time",
+      "기준": "TV",
+      "차이": 0.0009746666666666653
+    },
+    {
+      "변수": "Episode_Sentiment",
+      "기준": "TV",
+      "차이": 0.0005519999999999969
+    }
+  ]
+}
