@@ -103,6 +103,16 @@ EXPERIMENTS = {
         changed_element="수치형 결측 플래그 추가",
         interpretation="결측이라는 상태 자체가 추가 신호인지 확인",
     ),
+    "E202": Experiment(
+        "E202", "길이 전역 중앙값 대체", "catboost", "length_global_median", baseline_id="B002",
+        changed_element="Episode_Length_minutes를 학습 fold 중앙값으로 대체",
+        interpretation="길이 결측을 단일 대표값으로 채우는 효과 확인",
+    ),
+    "E203": Experiment(
+        "E203", "길이 그룹 중앙값 대체", "catboost", "length_group_median", baseline_id="E202",
+        changed_element="길이를 학습 fold의 Podcast_Name×Episode_Title 중앙값으로 대체",
+        interpretation="팟캐스트와 회차 정보로 결측 길이를 복원하는 효과 확인",
+    ),
     "E301": Experiment(
         "E301", "에피소드 번호 피처 검증", "catboost", "episode_number", baseline_id="B002",
         changed_element="Episode_Title에서 episode_number 추가",
@@ -179,9 +189,38 @@ def apply_feature_set(frame: pd.DataFrame, feature_set: str) -> pd.DataFrame:
         result["episode_number"] = (
             result["Episode_Title"].str.extract(r"(\d+)", expand=False).astype(float)
         )
-    elif feature_set != "base":
+    elif feature_set not in {"base", "length_global_median", "length_group_median"}:
         raise ValueError(f"Unknown feature set: {feature_set}")
     return result
+
+
+def prepare_fold_features(
+    train_x: pd.DataFrame,
+    valid_x: pd.DataFrame,
+    test_x: pd.DataFrame,
+    feature_set: str,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Fit feature-only imputations on one training fold and apply them elsewhere."""
+    if feature_set not in {"length_global_median", "length_group_median"}:
+        return train_x, valid_x, test_x
+    column = "Episode_Length_minutes"
+    global_median = float(train_x[column].median())
+    frames = [train_x.copy(), valid_x.copy(), test_x.copy()]
+    if feature_set == "length_global_median":
+        for frame in frames:
+            frame[column] = frame[column].fillna(global_median)
+        return tuple(frames)
+
+    group_columns = ["Podcast_Name", "Episode_Title"]
+    group_medians = train_x.groupby(group_columns, dropna=False)[column].median()
+    podcast_medians = train_x.groupby("Podcast_Name", dropna=False)[column].median()
+    for frame in frames:
+        missing = frame[column].isna()
+        keys = pd.MultiIndex.from_frame(frame.loc[missing, group_columns])
+        group_values = pd.Series(group_medians.reindex(keys).to_numpy(), index=frame.index[missing])
+        podcast_values = frame.loc[missing, "Podcast_Name"].map(podcast_medians)
+        frame.loc[missing, column] = group_values.fillna(podcast_values).fillna(global_median)
+    return tuple(frames)
 
 
 def make_folds(row_count: int, folds: int = FOLDS, seed: int = SEED) -> np.ndarray:
@@ -424,9 +463,12 @@ def train_experiment(experiment: Experiment, folds: int = FOLDS, seed: int = SEE
     for fold in range(folds):
         valid_mask = assignments == fold
         train_idx, valid_idx = np.flatnonzero(~valid_mask), np.flatnonzero(valid_mask)
+        fold_train_x, fold_valid_x, fold_test_x = prepare_fold_features(
+            train_x.iloc[train_idx], train_x.iloc[valid_idx], test_x, experiment.feature_set,
+        )
         valid_pred, fold_test_pred, best_iteration, importance = fit_fold(
-            experiment, train_x.iloc[train_idx], target.iloc[train_idx],
-            train_x.iloc[valid_idx], target.iloc[valid_idx], test_x, seed + fold,
+            experiment, fold_train_x, target.iloc[train_idx],
+            fold_valid_x, target.iloc[valid_idx], fold_test_x, seed + fold,
         )
         validate_predictions(valid_pred, len(valid_idx), f"fold {fold} prediction")
         validate_predictions(fold_test_pred, len(test), f"fold {fold} test prediction")

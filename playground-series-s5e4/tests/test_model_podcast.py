@@ -15,6 +15,7 @@ from model_podcast import (
     apply_feature_set,
     linear_length_prediction,
     make_folds,
+    prepare_fold_features,
     segment_rmse,
     validate_data_contract,
     validate_predictions,
@@ -80,6 +81,17 @@ class PodcastFrameworkTests(unittest.TestCase):
         self.assertEqual(len(coefficients), 3)
         self.assertEqual(len(predictions[0]), 1)
         self.assertTrue(np.isfinite(predictions[0]).all())
+
+    def test_group_length_imputation_is_fit_on_training_fold(self):
+        train_x = apply_feature_set(self.train.iloc[[0, 3]], "length_group_median")
+        valid_x = apply_feature_set(self.train.iloc[[1]], "length_group_median")
+        test_x = valid_x.copy()
+        prepared_train, prepared_valid, prepared_test = prepare_fold_features(
+            train_x, valid_x, test_x, "length_group_median",
+        )
+        self.assertFalse(prepared_train["Episode_Length_minutes"].isna().any())
+        self.assertEqual(prepared_valid["Episode_Length_minutes"].iloc[0], 10.0)
+        self.assertEqual(prepared_test["Episode_Length_minutes"].iloc[0], 10.0)
 
     def test_prediction_validation_rejects_nan_and_wrong_length(self):
         validate_predictions(np.array([1.0, 2.0]), 2, "valid")
