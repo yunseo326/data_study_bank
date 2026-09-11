@@ -216,9 +216,87 @@ def class_diagnostic_table() -> str:
     return make_table(frame, {"1순위 정답률", "상위 3개 포함률"})
 
 
+def interaction_experiment_section(train: pd.DataFrame) -> str:
+    baseline_path = ROOT / "outputs" / "E001" / "metrics.json"
+    interaction_path = ROOT / "outputs" / "E004" / "metrics.json"
+    partial_te_path = ROOT / "outputs" / "E005" / "partial_run.json"
+    if not baseline_path.exists() or not interaction_path.exists():
+        return "<p>E004 전체 실행 완료 후 상호작용 비교가 표시됩니다.</p>"
+
+    baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+    interaction = json.loads(interaction_path.read_text(encoding="utf-8"))
+    selected_pairs = [
+        ("Nitrogen", "Phosphorous"),
+        ("Moisture", "Phosphorous"),
+        ("Nitrogen", "Potassium"),
+        ("Potassium", "Phosphorous"),
+        ("Moisture", "Nitrogen"),
+    ]
+    pair_rows = []
+    for left, right in selected_pairs:
+        groups = train.groupby([left, right], observed=True).size()
+        pair_rows.append({
+            "조합": f"{left} × {right}",
+            "고유 조합": int(len(groups)),
+            "조합당 평균 행": float(groups.mean()),
+            "최소 행": int(groups.min()),
+        })
+    pair_table = make_table(pd.DataFrame(pair_rows))
+
+    base_classes = {row["label"]: row for row in baseline["per_class"]}
+    class_rows = []
+    for row in interaction["per_class"]:
+        old = base_classes[row["label"]]
+        class_rows.append({
+            "비료": row["label"],
+            "E001 Top-3": old["top3_recall"],
+            "E004 Top-3": row["top3_recall"],
+            "변화": row["top3_recall"] - old["top3_recall"],
+        })
+    class_table = make_table(
+        pd.DataFrame(class_rows), {"E001 Top-3", "E004 Top-3", "변화"},
+    )
+
+    score_gain = interaction["cv_map3"] - baseline["cv_map3"]
+    loss_gain = interaction["log_loss"] - baseline["log_loss"]
+    runtime_ratio = interaction["runtime_minutes"] / baseline["runtime_minutes"]
+    te_html = "<p>E005 부분 실행 기록이 없습니다.</p>"
+    if partial_te_path.exists():
+        partial = json.loads(partial_te_path.read_text(encoding="utf-8"))
+        fold_text = " · ".join(f"{value:.6f}" for value in partial["fold_scores"])
+        te_html = f"""
+        <div class="card warning"><h3>E005 · Target encoding은 중단</h3>
+        <div class="metric">{partial['observed_mean_map3']:.6f}</div>
+        <p class="note">완료된 4개 fold의 관측 평균이며 정식 OOF 점수가 아닙니다.</p>
+        <p>Fold 점수: <code>{fold_text}</code></p>
+        <p>원 변수 8개와 쌍 5개를 클래스별 확률로 바꾼 91개 특성을 추가했지만,
+        best iteration이 1·1·3·1에서 멈췄습니다. CatBoost의 자체 범주 통계와 정보가
+        중복되고 강하게 상관된 확률 특성이 한꺼번에 들어가 학습을 방해했을 가능성이 큽니다.</p>
+        <p class="note">사용자 요청으로 마지막 fold를 중단했습니다. 따라서 E004와 같은
+        완성된 5-fold 결과로 비교하거나 모델 선택에 사용하지 않습니다.</p></div>"""
+
+    return f"""
+    <section class="grid two"><article class="card finding"><h3>E004 · 쌍 상호작용 채택 후보</h3>
+    <div class="metric">{interaction['cv_map3']:.6f}</div>
+    <p>E001 대비 MAP@3 <strong>{score_gain:+.6f}</strong>, log loss
+    <strong>{loss_gain:+.6f}</strong>입니다. 다섯 fold 모두 0.318754~0.320777로
+    같은 개선 방향을 보였습니다.</p><p class="note">실행 시간 {interaction['runtime_minutes']:.2f}분 ·
+    E001의 {runtime_ratio:.1f}배 · 모든 fold가 180 iteration 한도 도달</p></article>
+    {te_html}</section>
+    <h3 style="margin-top:18px">선택한 조합의 표본 밀도</h3>{pair_table}
+    <p class="note">각 조합에 평균 수백 행이 있어 쌍 수준 통계는 충분히 안정적입니다.
+    다만 이를 7개 클래스 확률 91개로 동시에 확장하는 것은 별개의 문제입니다.</p>
+    <h3 style="margin-top:18px">클래스별 Top-3 recall 변화</h3>{class_table}
+    <p class="callout">DAP는 18.59%→26.76%, Urea는 9.72%→19.36%로 개선됐습니다.
+    반면 10-26-26과 14-35-14는 하락했습니다. 전체 점수 상승은 모든 클래스를 똑같이
+    개선한 결과가 아니라, 기존에 거의 잡지 못했던 소수 클래스로 확률 순위가 재배치된 결과입니다.</p>
+    """
+
+
 def make_html(a: dict) -> str:
     experiment_html, best_text, best_score = experiment_table()
     class_html = class_diagnostic_table()
+    interaction_html = interaction_experiment_section(a["train"])
     target = pd.DataFrame({
         "비료": a["target_counts"].index,
         "행 수": a["target_counts"].values,
@@ -269,13 +347,15 @@ def make_html(a: dict) -> str:
     <h2>왜 상호작용을 봐야 하는가</h2><section class="grid two"><article class="card"><h3>단일 특성의 최적 분류 정확도</h3><p class="note">각 값에서 가장 흔한 클래스를 고른 탐색용 상한입니다. 교차검증 점수가 아닙니다.</p>{bars(single_rows,'features','in_sample_top1',scale=.20)}</article><article class="card"><h3>두 특성 조합 상위</h3><p class="note">조합값에서 가장 흔한 클래스를 고른 학습 내 수치입니다. 개선 여부는 OOF에서 다시 확인해야 합니다.</p>{bars(pair_rows,'features','in_sample_top1',scale=.22)}</article></section>
     <p class="callout">단일 특성 최고치는 {a['single_strength'].iloc[0]['in_sample_top1']:.4f}지만 두 특성 조합은 {a['pair_strength'].iloc[0]['in_sample_top1']:.4f}까지 올라갑니다. 그래서 첫 피처 실험은 영양소와 수분의 쌍 조합이며, 타깃 인코딩은 반드시 fold 안에서만 계산합니다.</p>
 
+    <h2>상호작용과 Target encoding 실험 결과</h2>{interaction_html}
+
     <h2>수치형 특성의 실제 형태</h2><article class="card">{make_table(numeric_summary)}<p class="note">이름은 수치형이지만 고유값 수가 14~43개뿐입니다. 원값을 연속량으로 처리한 기준선과 모든 값을 범주로 처리한 실험을 분리해 비교합니다.</p></article>
 
     <h2>E001은 어떤 클래스를 어려워하는가</h2><article class="card">{class_html}<p class="note">전체 정확도가 아니라 각 정답 클래스가 1순위 또는 상위 3개에 들어간 비율입니다. DAP와 Urea의 낮은 포함률은 다음 오류 분석의 최우선 대상입니다.</p></article>
 
-    <h2>진행 순서</h2><article class="card"><ol><li><strong>E000 빈도 기준선:</strong> 지표와 제출 형식이 맞는지 확인합니다.</li><li><strong>E001 CatBoost:</strong> 원본 8개 특성으로 첫 OOF 기준선을 만듭니다.</li><li><strong>E002 모델 비교:</strong> 같은 fold에서 모델만 LightGBM으로 바꿉니다.</li><li><strong>E003 범주형 가설:</strong> 8개 특성을 모두 범주형으로 처리합니다.</li><li><strong>E004 상호작용:</strong> 영양소·수분 쌍을 추가합니다.</li><li><strong>E005 누수 없는 타깃 인코딩:</strong> 학습 fold 통계만 사용합니다.</li><li><strong>E006 앙상블:</strong> 서로 다른 오류를 가진 완료 모델만 OOF 확률 평균합니다.</li><li><strong>공개 해법 비교:</strong> 독립 실험을 고정한 뒤 고차 조합과 원본 데이터 사용을 별도 검증합니다.</li></ol></article>
+    <h2>실험 판단</h2><article class="card"><ol><li><strong>E004 쌍 상호작용:</strong> 5-fold MAP@3이 0.319455로 개선되어 현재 최고 모델로 유지합니다.</li><li><strong>E005 target encoding:</strong> 누수 없이 구현했지만 4개 fold 모두 E004보다 낮아 중단했습니다. 정식 OOF 결과로 취급하지 않습니다.</li><li><strong>후속 후보:</strong> target encoding을 다시 볼 때는 강한 쌍 하나만 추가하거나 CatBoost가 아닌 별도 모델에서 검증합니다.</li><li><strong>학습량 후보:</strong> E004의 모든 fold가 180회 한도에 도달했으므로 iteration 상한 변경은 별도 실험으로 분리합니다.</li></ol></article>
 
-    <h2>현재 결론</h2><section class="grid two"><article class="card finding"><h3>우선순위 1 · 검증 고정</h3><p>75만 행이라 작은 점수 차이도 보일 수 있지만 fold가 바뀌면 원인을 비교할 수 없습니다. 모든 실험에 같은 seed와 fold를 사용합니다.</p></article><article class="card finding"><h3>우선순위 2 · 조합 가설</h3><p>클래스별 수치 평균은 거의 비슷합니다. 단순 상관계수보다 조건 조합을 잘 표현하는 모델과 인코딩이 중요합니다.</p></article><article class="card warning"><h3>주의 · 타깃 인코딩 누수</h3><p>전체 학습 데이터에서 만든 타깃 평균을 검증 행에 넣으면 정답 정보를 미리 보게 됩니다. 각 fold의 학습 부분에서만 통계를 만듭니다.</p></article><article class="card"><h3>다음 판단</h3><p>E001과 E003의 차이로 수치값의 범주형 처리 효과를 확인한 뒤, E004 쌍 조합을 실행합니다.</p></article></section>
+    <h2>현재 결론</h2><section class="grid two"><article class="card finding"><h3>채택 · 쌍 상호작용</h3><p>명시적 영양소·수분 조합은 MAP@3과 log loss를 함께 개선했고 fold 편차도 작았습니다. 현재 최고 모델은 E004입니다.</p></article><article class="card warning"><h3>보류 · 일괄 target encoding</h3><p>누수를 막아도 91개 확률 특성을 동시에 추가하면 성능이 크게 악화됐습니다. 기법 이름보다 모델과 표현의 궁합이 중요합니다.</p></article><article class="card"><h3>읽어야 할 변화</h3><p>E004는 DAP와 Urea를 크게 개선했지만 일부 다수 클래스의 top-3 recall은 낮췄습니다. 평균 점수만 보지 않고 클래스별 순위 이동을 함께 봐야 합니다.</p></article><article class="card"><h3>다음 우선순위</h3><p>현재 요청 범위에서는 E004를 유지합니다. 후속 실험은 한 번에 강한 쌍 하나의 target encoding 또는 iteration 상한 중 하나만 바꾸는 순서가 적절합니다.</p></article></section>
 
     <footer>데이터: 로컬 competition CSV · <a href="https://www.kaggle.com/competitions/playground-series-s5e6" target="_blank" rel="noopener noreferrer">Kaggle 대회 설명</a> · <a href="https://www.kaggle.com/competitions/playground-series-s5e6/writeups/chris-deotte-1st-place-fast-gpu-experimentation-wi" target="_blank" rel="noopener noreferrer">공개 1위 해법</a> · 생성 스크립트: src/eda_fertilizer.py · 원본 CSV는 변경하지 않음</footer>
     </main></body></html>"""
@@ -308,7 +388,8 @@ def main() -> None:
     DOCS_PATH.parent.mkdir(parents=True, exist_ok=True)
     summary = serializable_summary(analysis)
     SUMMARY_PATH.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    DOCS_PATH.write_text(make_html(analysis) + "\n", encoding="utf-8")
+    report = "\n".join(line.rstrip() for line in make_html(analysis).splitlines()) + "\n"
+    DOCS_PATH.write_text(report, encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 
