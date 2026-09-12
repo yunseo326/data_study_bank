@@ -42,6 +42,21 @@ DATA_DICTIONARY = [
     {"변수": "y", "구분": "타깃", "공식 의미": "정기예금 가입 여부", "해석 주의": "y=1 확률을 예측하고 ROC AUC로 평가"},
 ]
 
+FEATURE_GUIDE = [
+    {"형태": "수치", "변수": "age", "모델이 보는 정보": "18~95세의 고객 나이", "예상 영향과 읽는 법": "가입 성향이 나이에 비례하기보다 학생·은퇴 연령대 등에서 달라질 수 있어 비선형 효과를 예상", "다음 표현/가설": "원값 유지 → 필요하면 연령 구간을 한 변수 실험", "우선순위": "중"},
+    {"형태": "수치", "변수": "balance", "모델이 보는 정보": "음수도 가능한 연평균 잔액(유로)", "예상 영향과 읽는 법": "잔액 수준이 가입 여력과 연결될 수 있지만 큰 이상치와 음수 때문에 단순 비례 관계는 예상하지 않음", "다음 표현/가설": "원값 유지 → 부호 보존 로그 또는 분위 구간", "우선순위": "상"},
+    {"형태": "수치", "변수": "duration", "모델이 보는 정보": "마지막 통화시간(초)", "예상 영향과 읽는 법": "길수록 가입률이 크게 높아지는 가장 강한 변수지만 통화 종료 전에는 알 수 없음", "다음 표현/가설": "Kaggle 트랙만 사용, 현실 사전 타기팅 트랙에서는 제외", "우선순위": "필수 분리"},
+    {"형태": "수치", "변수": "day, campaign", "모델이 보는 정보": "월중 연락일, 현재 캠페인 연락 횟수", "예상 영향과 읽는 법": "캠페인 운영과 고객 피로도가 섞일 수 있어 값이 커질수록 좋다고 단정하지 않음", "다음 표현/가설": "원값 기준선 → month와 조합 또는 연락 횟수 구간", "우선순위": "중"},
+    {"형태": "상태+수치", "변수": "pdays, previous", "모델이 보는 정보": "이전 연락 여부·경과일·과거 연락 횟수", "예상 영향과 읽는 법": "처음 연락한 고객과 재접촉 고객의 구조가 다를 수 있으며 -1은 숫자가 아니라 '이전 연락 없음' 상태", "다음 표현/가설": "previous_contacted 상태 분리(검증 완료: 효과 거의 없음) 또는 재접촉 강도", "우선순위": "검증됨"},
+    {"형태": "범주", "변수": "job, marital, education", "모델이 보는 정보": "고객의 직업·결혼·교육 집단", "예상 영향과 읽는 법": "생활 단계와 소득 안정성의 간접 신호일 수 있으나 인과효과나 사람의 가치로 해석하면 안 됨", "다음 표현/가설": "순서를 강제하지 않는 범주 처리, 희소 집단 안정성 확인", "우선순위": "중"},
+    {"형태": "범주", "변수": "default, housing, loan", "모델이 보는 정보": "채무불이행·주택담보·개인대출 보유 상태", "예상 영향과 읽는 법": "자금 여력 또는 금융상품 보유 상황과 연결될 수 있지만 각 변수는 서로 다른 의미", "다음 표현/가설": "개별 범주 유지 → 대출 보유 조합은 후순위 상호작용", "우선순위": "중"},
+    {"형태": "범주", "변수": "contact, month", "모델이 보는 정보": "연락 방식과 마지막 연락 월", "예상 영향과 읽는 법": "채널 효과·계절성뿐 아니라 은행이 누구에게 언제 연락했는지가 함께 반영됨", "다음 표현/가설": "native categorical 유지 → contact × month", "우선순위": "상"},
+    {"형태": "범주", "변수": "poutcome", "모델이 보는 정보": "이전 캠페인 결과", "예상 영향과 읽는 법": "과거 성공 고객의 가입 가능성이 높아 강한 신호를 예상하며 unknown은 정보 없음으로 유지", "다음 표현/가설": "범주 유지 → 이전 접촉 상태와 조합", "우선순위": "상"},
+    {"형태": "표현/변환", "변수": "balance, campaign, duration", "모델이 보는 정보": "원값을 구간·순위·부호 보존 로그로 다시 표현", "예상 영향과 읽는 법": "극단값의 영향을 줄이거나 임계점을 쉽게 찾게 할 수 있지만 트리 모델이 이미 비선형 분할을 학습하므로 개선은 검증이 필요", "다음 표현/가설": "한 번에 한 변환만 E008과 비교", "우선순위": "상"},
+    {"형태": "상호작용", "변수": "duration × contact", "모델이 보는 정보": "연락 채널에 따라 같은 통화시간의 의미가 다른지", "예상 영향과 읽는 법": "채널별 통화 패턴이 다르면 고객 순위 구분을 보완할 수 있음", "다음 표현/가설": "공개 강한 모델 대조 후 첫 후보로 검토", "우선순위": "상"},
+    {"형태": "상호작용", "변수": "poutcome × pdays/previous", "모델이 보는 정보": "과거 결과와 그 결과의 시점·접촉 횟수 조합", "예상 영향과 읽는 법": "같은 과거 성공이라도 최근성과 접촉 강도에 따라 재가입 가능성이 달라질 수 있음", "다음 표현/가설": "희소 조합의 표본 수를 확인한 뒤 실험", "우선순위": "상"},
+]
+
 
 def ks_statistic(a: np.ndarray, b: np.ndarray) -> float:
     """Two-sample KS statistic without a SciPy dependency."""
@@ -379,6 +394,9 @@ def make_html(a: dict) -> str:
     ).replace(
         "<table>", '<table class="dictionary">'
     )
+    feature_guide_html = dataframe_table(pd.DataFrame(FEATURE_GUIDE)).replace(
+        "<table>", '<table class="dictionary feature-guide">'
+    )
 
     duration_html = dataframe_table(duration_pattern, {"양성률"}) if duration_pattern is not None else ""
     cat_sections = []
@@ -403,14 +421,35 @@ def make_html(a: dict) -> str:
     .finding{border-left:4px solid var(--blue)}.warning{border-left-color:var(--amber)}.risk{border-left-color:var(--red)}.good{border-left-color:var(--teal)}
     .status-line{display:flex;align-items:center;gap:10px;margin-top:12px}.pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#e9f8f4;color:#087764;font-size:12px;font-weight:800}.pending{background:#fff3df;color:#9a5a05}.score-empty{font-size:36px;font-weight:800;letter-spacing:-.04em}.rule-list{margin:0;padding-left:20px}.rule-list li{margin:7px 0}
     .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th{color:var(--muted);font-weight:700;background:#f8faff}th:first-child,td:first-child{text-align:left}.dictionary th,.dictionary td{text-align:left}.dictionary td:nth-child(3),.dictionary td:nth-child(4){white-space:normal;min-width:220px}
+    .feature-guide td:nth-child(4),.feature-guide td:nth-child(5){white-space:normal;min-width:260px}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.road-step{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fbfcff}.road-step span{display:inline-flex;margin-bottom:10px;padding:3px 8px;border-radius:999px;font-size:12px;font-weight:800}.road-step h3{margin-bottom:8px}.road-step p{margin:0;font-size:14px}.road-step.done span{background:#e9f8f4;color:#087764}.road-step.now{border:2px solid var(--blue);background:#f5f8ff}.road-step.now span{background:#e8efff;color:#174fc4}.road-step.next span{background:#eef2f8;color:var(--muted)}
     .bar-row{display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;margin:10px 0;font-size:13px}.bar-track{height:9px;background:#e9eef7;border-radius:9px;overflow:hidden}.bar-track span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#63a0ff);border-radius:9px}.bar-value{text-align:right;font-variant-numeric:tabular-nums}
     code{background:#eef2f8;padding:2px 5px;border-radius:5px}ol li{margin:8px 0}.small{font-size:12px;color:var(--muted)}footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
-    @media(max-width:820px){.grid,.two{grid-template-columns:1fr 1fr}}@media(max-width:560px){main{padding-top:28px}.grid,.two{grid-template-columns:1fr}.bar-row{grid-template-columns:88px 1fr 58px}h2{margin-top:42px}}
+    @media(max-width:820px){.grid,.two{grid-template-columns:1fr 1fr}.roadmap{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){main{padding-top:28px}.grid,.two,.roadmap{grid-template-columns:1fr}.bar-row{grid-template-columns:88px 1fr 58px}h2{margin-top:42px}}
     """
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Bank Kaggle 데이터 분석과 모델링 실험"><title>Bank 데이터 분석과 모델링</title><style>{css}</style></head>
     <body><main><div class="eyebrow">Kaggle Data Analysis Study · Competition 1</div><h1>Bank 데이터 분석과 모델링</h1>
     <p class="lead">데이터 품질과 누수 위험을 확인하고, 고정된 OOF 검증에서 한 요소씩 바꾼 실험 결과를 정리했습니다. 원본 CSV는 변경하지 않았습니다.</p>
     <section class="grid"><div class="card"><div class="metric">{fmt_int(len(train))}</div><div class="label">학습 행</div></div><div class="card"><div class="metric">{fmt_int(len(test))}</div><div class="label">테스트 행</div></div><div class="card"><div class="metric">{len(a['features'])}</div><div class="label">예측 변수</div></div><div class="card"><div class="metric">{fmt_pct(a['target_rate'])}</div><div class="label">타깃 y=1 비율</div></div></section>
+
+    <h2>무엇을 예측하고, 무엇이 좋은 점수인가</h2><section class="grid two">
+      <article class="finding good"><h3>정답 y와 예측값</h3><p><code>y=1</code>은 고객이 정기예금에 <strong>가입</strong>했다는 뜻이고, <code>y=0</code>은 가입하지 않았다는 뜻입니다. 모델은 각 고객에게 <strong>y=1일 확률</strong>을 0~1 사이로 냅니다. 1에 가까울수록 가입 가능성이 높다고 판단한 고객입니다.</p><p class="note">제출값 자체를 모두 1에 가깝게 만드는 것이 목표는 아닙니다. 실제 가입 고객에게 비가입 고객보다 더 높은 점수를 주는 것이 핵심입니다.</p></article>
+      <article><h3>평가지표 ROC AUC</h3><p>ROC AUC는 무작위로 고른 가입 고객 한 명과 비가입 고객 한 명을 비교할 때, 가입 고객에게 더 높은 예측값을 줄 확률처럼 읽을 수 있습니다. <strong>1.0에 가까울수록 좋고</strong>, 0.5는 무작위 순위 수준입니다. 현재 E008의 <strong>0.969283</strong>은 약 96.9%의 쌍을 올바른 순서로 놓는 수준이며 1차 목표 0.970까지 0.000717 남았습니다.</p><p class="note">ROC AUC는 확률이 정확히 보정됐는지보다 고객의 상대적 순서를 평가합니다. 따라서 임계값 0.5에서의 정확도와는 다른 지표입니다.</p></article>
+    </section>
+    <section class="grid two" style="margin-top:14px">
+      <article><h3>Kaggle 점수 트랙</h3><p>대회 규칙 안에서 <code>duration</code>을 포함한 16개 변수를 사용해 ROC AUC를 최대화합니다. <strong>클수록 좋으며 단일 모델 0.970</strong>을 현재 1차 통과선으로 둡니다.</p></article>
+      <article class="finding warning"><h3>현실 사전 타기팅 트랙</h3><p>전화하기 전에 가입 가능성이 높은 고객을 고르는 목적이라면 통화 후 알게 되는 <code>duration</code>을 제외합니다. 이 점수도 클수록 좋지만, 정보 조건이 다르므로 Kaggle 트랙보다 낮다고 실패가 아니며 두 점수를 직접 우열 비교하지 않습니다.</p></article>
+    </section>
+
+    <h2>전체 진행 로드맵</h2><article><div class="roadmap">
+      <div class="road-step done"><span>1 · 완료</span><h3>문제·데이터 이해</h3><p>타깃, 변수 의미, 결측·중복, train/test 차이와 <code>duration</code>의 사용 시점 위험을 확인했습니다.</p></div>
+      <div class="road-step done"><span>2 · 완료</span><h3>검증·기준선</h3><p>고정 Stratified 5-Fold를 만들고 CatBoost, LightGBM, XGBoost를 같은 조건에서 비교했습니다.</p></div>
+      <div class="road-step done"><span>3 · 완료</span><h3>단일 설정 개선</h3><p>한 번에 한 설정만 바꿔 E008 LightGBM 0.969283까지 개선하고 기각한 변경도 기록했습니다.</p></div>
+      <div class="road-step now"><span>4 · 현재</span><h3>피처 가설 검증</h3><p>공개 강한 단일 모델과 차이를 대조한 뒤 아래 후보 중 근거가 가장 강한 피처 하나만 E008에 추가해 검증합니다.</p></div>
+      <div class="road-step next"><span>5 · 다음</span><h3>외부 데이터·오류 다양화</h3><p>UCI 원본 데이터는 학습 fold에만 추가해 보고, 서로 다른 오류를 만드는 모델이 확인될 때만 앙상블을 재검토합니다.</p></div>
+      <div class="road-step next"><span>6 · 마무리</span><h3>제출·해석·회고</h3><p>OOF 개선이 재현되면 Kaggle 제출로 확인하고, 점수·현실 적용 한계·다음 대회에 가져갈 교훈을 정리합니다.</p></div>
+    </div><p class="note">현재 초점은 4단계입니다. 설정 후보를 무작정 늘리기보다 새로운 정보를 줄 가능성이 있는 피처 가설을 한 번에 하나씩 검증합니다.</p></article>
+
+    <h2>Feature를 어떻게 읽고 만들 것인가</h2><article><p>Feature는 모델이 고객을 구분할 때 보는 단서입니다. <strong>수치형</strong>은 크기와 임계점을, <strong>범주형</strong>은 집단별 차이를, <strong>표현/변환(representation)</strong>은 같은 원정보를 모델이 더 쉽게 읽는 형태로 바꾼 것을, <strong>상호작용(interaction)</strong>은 두 조건이 함께 있을 때 생기는 차이를 뜻합니다.</p><p class="note">아래의 “예상 영향”은 인과관계나 성능 향상을 확정한 결과가 아니라 EDA와 업무 의미에서 세운 가설입니다. 실제 채택 여부는 동일한 fold에서 한 후보씩 비교해 결정합니다.</p>{feature_guide_html}</article>
 
     <h2>모델링 결과 한눈에 보기</h2><section class="grid two">
       <article class="finding {current_class}"><h3>{current_title}</h3><div class="score-empty">{current_score}</div><div class="status-line"><span class="pill">EDA 완료</span><span class="pill">{current_status}</span></div><p class="note">{current_note}</p></article>
