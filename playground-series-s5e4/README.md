@@ -25,6 +25,16 @@ python src/model_podcast.py --experiment B002
 
 현재 PC에서는 저장소의 공용 로컬 패키지 폴더가 있으면 자동으로 재사용합니다. 모든 모델 실험은 seed 326의 동일한 shuffled 5-Fold를 사용합니다.
 
+방향 탐색은 정식 검증과 분리된 5분 목표의 빠른 프로토콜을 먼저 사용합니다.
+
+```powershell
+python src/quick_experiments.py --experiment B000
+python src/quick_experiments.py --experiment B001
+python src/quick_experiments.py --experiment B002
+```
+
+`quick-v1`은 타깃 10분위와 주요 결측 조합을 보존한 고정 7.5만 행에서 동일한 5-fold를 실행합니다. CatBoost는 최대 200회로 제한하고 방향 탐색에 불필요한 test 예측은 생략합니다. 결과는 `benchmarks/quick_experiments.csv`와 `outputs/quick/`에만 기록되며 정식 OOF 결과를 대체하지 않습니다.
+
 ## 현재 결과
 
 - B000 평균 기준: OOF RMSE 27.138370

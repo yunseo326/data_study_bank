@@ -21,6 +21,7 @@ from model_podcast import (
     validate_predictions,
 )
 from analyze_missing_residuals import add_missing_pattern, missing_pattern_shift, summarize_groups
+from quick_experiments import make_quick_sample_indices, sampling_strata
 
 
 class PodcastFrameworkTests(unittest.TestCase):
@@ -126,6 +127,16 @@ class PodcastFrameworkTests(unittest.TestCase):
         self.assertAlmostEqual(summary.loc["A", "bias"], 0.0)
         self.assertAlmostEqual(summary.loc["B", "bias"], 1.0)
 
+    def test_quick_sample_is_fixed_and_preserves_key_strata(self):
+        frame = pd.concat([self.train] * 25, ignore_index=True)
+        frame["id"] = np.arange(len(frame))
+        first = make_quick_sample_indices(frame, max_rows=50, seed=326)
+        second = make_quick_sample_indices(frame, max_rows=50, seed=326)
+        np.testing.assert_array_equal(first, second)
+        self.assertEqual(len(first), 50)
+        labels = sampling_strata(frame)
+        self.assertEqual(set(labels.iloc[first]), set(labels))
+
     def test_published_report_explains_features_objective_and_roadmap(self):
         report = (PROJECT_ROOT / "docs" / "index.html").read_text(encoding="utf-8")
         source = (PROJECT_ROOT / "src" / "eda_podcast.py").read_text(encoding="utf-8")
@@ -136,6 +147,8 @@ class PodcastFrameworkTests(unittest.TestCase):
             self.assertIn("사용할 표현과 interaction 후보", page)
             self.assertIn('id="roadmap"', page)
             self.assertIn("현재 위치:", page)
+            self.assertIn('id="quick-protocol"', page)
+            self.assertIn("quick-v1", page)
 
 
 if __name__ == "__main__":

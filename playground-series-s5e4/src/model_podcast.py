@@ -63,6 +63,21 @@ class Experiment:
     interpretation: str = ""
 
 
+@dataclass(frozen=True)
+class ModelBudget:
+    """Iteration limits separated from experiment definitions for cheap screening."""
+
+    catboost_iterations: int = 500
+    catboost_early_stopping: int = 60
+    lightgbm_estimators: int = 1600
+    lightgbm_early_stopping: int = 100
+    xgboost_estimators: int = 1200
+    xgboost_early_stopping: int = 80
+
+
+DEFAULT_MODEL_BUDGET = ModelBudget()
+
+
 EXPERIMENTS = {
     "B000": Experiment(
         "B000", "평균 예측 최저 기준", "mean", changed_element="학습 fold 타깃 평균",
@@ -291,56 +306,60 @@ def fit_tree_model(
     train_y: pd.Series,
     valid_x: pd.DataFrame,
     valid_y: pd.Series,
-    test_x: pd.DataFrame,
+    test_x: pd.DataFrame | None,
     seed: int,
+    budget: ModelBudget = DEFAULT_MODEL_BUDGET,
 ) -> tuple[np.ndarray, np.ndarray, int, np.ndarray]:
     if model_name == "catboost":
         from catboost import CatBoostRegressor
 
         categorical = list(train_x.select_dtypes(exclude=np.number).columns)
         model = CatBoostRegressor(
-            iterations=500, depth=7, learning_rate=0.08, loss_function="RMSE",
+            iterations=budget.catboost_iterations, depth=7, learning_rate=0.08, loss_function="RMSE",
             eval_metric="RMSE", l2_leaf_reg=5.0, random_strength=0.5,
             bootstrap_type="Bernoulli", subsample=0.8, random_seed=seed,
             thread_count=-1, allow_writing_files=False, verbose=False,
         )
         model.fit(
             train_x, train_y, cat_features=categorical, eval_set=(valid_x, valid_y),
-            early_stopping_rounds=60, use_best_model=True,
+            early_stopping_rounds=budget.catboost_early_stopping, use_best_model=True,
         )
         iteration = int(model.get_best_iteration() + 1)
         importance = np.asarray(model.get_feature_importance(), dtype=float)
-        return model.predict(valid_x), model.predict(test_x), iteration, importance
+        test_prediction = model.predict(test_x) if test_x is not None else np.empty(0)
+        return model.predict(valid_x), test_prediction, iteration, importance
 
-    encoded_train, encoded_valid, encoded_test = ordinal_encode(train_x, valid_x, test_x)
+    encoding_test = test_x if test_x is not None else valid_x.iloc[:0]
+    encoded_train, encoded_valid, encoded_test = ordinal_encode(train_x, valid_x, encoding_test)
     if model_name == "lightgbm":
         from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 
         model = LGBMRegressor(
-            n_estimators=1600, learning_rate=0.04, num_leaves=31,
+            n_estimators=budget.lightgbm_estimators, learning_rate=0.04, num_leaves=31,
             subsample=0.8, colsample_bytree=0.8, reg_lambda=2.0,
             random_state=seed, n_jobs=-1, verbosity=-1,
         )
         model.fit(
             encoded_train, train_y, eval_set=[(encoded_valid, valid_y)],
-            eval_metric="rmse", callbacks=[early_stopping(100, verbose=False), log_evaluation(0)],
+            eval_metric="rmse", callbacks=[early_stopping(budget.lightgbm_early_stopping, verbose=False), log_evaluation(0)],
         )
         iteration = int(model.best_iteration_)
     elif model_name == "xgboost":
         from xgboost import XGBRegressor
 
         model = XGBRegressor(
-            n_estimators=1200, learning_rate=0.04, max_depth=7, min_child_weight=5,
+            n_estimators=budget.xgboost_estimators, learning_rate=0.04, max_depth=7, min_child_weight=5,
             subsample=0.8, colsample_bytree=0.8, reg_lambda=5.0,
             objective="reg:squarederror", eval_metric="rmse", tree_method="hist",
-            random_state=seed, n_jobs=-1, early_stopping_rounds=80,
+            random_state=seed, n_jobs=-1, early_stopping_rounds=budget.xgboost_early_stopping,
         )
         model.fit(encoded_train, train_y, eval_set=[(encoded_valid, valid_y)], verbose=False)
         iteration = int(model.best_iteration + 1)
     else:
         raise ValueError(f"Unknown tree model: {model_name}")
     importance = np.asarray(model.feature_importances_, dtype=float)
-    return model.predict(encoded_valid), model.predict(encoded_test), iteration, importance
+    test_prediction = model.predict(encoded_test) if test_x is not None else np.empty(0)
+    return model.predict(encoded_valid), test_prediction, iteration, importance
 
 
 def fit_fold(
@@ -349,25 +368,31 @@ def fit_fold(
     train_y: pd.Series,
     valid_x: pd.DataFrame,
     valid_y: pd.Series,
-    test_x: pd.DataFrame,
+    test_x: pd.DataFrame | None,
     seed: int,
+    budget: ModelBudget = DEFAULT_MODEL_BUDGET,
 ) -> tuple[np.ndarray, np.ndarray, int, np.ndarray]:
     if experiment.model == "mean":
         value = float(train_y.mean())
-        return np.full(len(valid_x), value), np.full(len(test_x), value), 1, np.zeros(train_x.shape[1])
+        test_length = len(test_x) if test_x is not None else 0
+        return np.full(len(valid_x), value), np.full(test_length, value), 1, np.zeros(train_x.shape[1])
     if experiment.model == "linear_length":
-        predictions, _ = linear_length_prediction(train_x, train_y, valid_x, test_x)
-        return predictions[0], predictions[1], 1, np.zeros(train_x.shape[1])
+        frames = (valid_x, test_x) if test_x is not None else (valid_x,)
+        predictions, _ = linear_length_prediction(train_x, train_y, *frames)
+        test_prediction = predictions[1] if test_x is not None else np.empty(0)
+        return predictions[0], test_prediction, 1, np.zeros(train_x.shape[1])
     if experiment.target_mode == "length_residual":
-        bases, _ = linear_length_prediction(train_x, train_y, train_x, valid_x, test_x)
+        frames = (train_x, valid_x, test_x) if test_x is not None else (train_x, valid_x)
+        bases, _ = linear_length_prediction(train_x, train_y, *frames)
         residual_y = train_y.to_numpy() - bases[0]
         residual_valid = valid_y.to_numpy() - bases[1]
         valid_residual, test_residual, iteration, importance = fit_tree_model(
             experiment.model, train_x, pd.Series(residual_y, index=train_x.index),
-            valid_x, pd.Series(residual_valid, index=valid_x.index), test_x, seed,
+            valid_x, pd.Series(residual_valid, index=valid_x.index), test_x, seed, budget,
         )
-        return bases[1] + valid_residual, bases[2] + test_residual, iteration, importance
-    return fit_tree_model(experiment.model, train_x, train_y, valid_x, valid_y, test_x, seed)
+        test_prediction = bases[2] + test_residual if test_x is not None else np.empty(0)
+        return bases[1] + valid_residual, test_prediction, iteration, importance
+    return fit_tree_model(experiment.model, train_x, train_y, valid_x, valid_y, test_x, seed, budget)
 
 
 def segment_rmse(train: pd.DataFrame, target: pd.Series, predictions: np.ndarray) -> list[dict]:

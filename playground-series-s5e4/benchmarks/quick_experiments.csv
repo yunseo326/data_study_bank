@@ -1,0 +1,4 @@
+﻿experiment_id,date,model,feature_set,rows,folds,cv_rmse,fold_std,fold_scores,runtime_minutes,budget_minutes,within_budget,sample_seed,protocol
+B000,2026-09-12,mean,base,75000,5,27.154563,0.143996,27.215851|27.238484|26.928628|27.054827|27.333118,0.076,5.0,true,326,quick-v1
+B001,2026-09-12,linear_length,base,75000,5,13.521604,0.102058,13.525012|13.515752|13.594752|13.336887|13.633690,0.062,5.0,true,326,quick-v1
+B002,2026-09-12,catboost,base,75000,5,13.157543,0.076334,13.145619|13.158376|13.186568|13.029768|13.266276,3.249,5.0,true,326,quick-v1

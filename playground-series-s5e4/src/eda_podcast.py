@@ -23,6 +23,8 @@ DOCS_PATH = PROJECT_ROOT / "docs" / "index.html"
 SUMMARY_PATH = PROJECT_ROOT / "logs" / "result" / "podcast_eda_summary.json"
 MISSING_RESIDUAL_PATH = PROJECT_ROOT / "logs" / "result" / "podcast_missing_residual_analysis.json"
 REGISTRY_PATH = PROJECT_ROOT / "benchmarks" / "experiments.csv"
+QUICK_REGISTRY_PATH = PROJECT_ROOT / "benchmarks" / "quick_experiments.csv"
+QUICK_B002_METRICS_PATH = PROJECT_ROOT / "outputs" / "quick" / "B002" / "metrics.json"
 TARGET = "Listening_Time_minutes"
 ID_COLUMN = "id"
 RNG = np.random.default_rng(326)
@@ -238,6 +240,25 @@ def render_report(result: dict) -> str:
         missing_view[column] = missing_view[column].map(lambda value: f"{100 * value:.2f}%")
     corr = result["correlation"]
     diagnostic = result["missing_residual"]
+    quick_html = '<p class="muted">빠른 기준선 실행 전입니다.</p>'
+    quick_note = "빠른 프로토콜은 정식 OOF를 대체하지 않으며 상위 후보 선별에만 사용합니다."
+    if QUICK_REGISTRY_PATH.exists():
+        quick = pd.read_csv(QUICK_REGISTRY_PATH)
+        quick_columns = [
+            column for column in [
+                "experiment_id", "model", "rows", "folds", "cv_rmse",
+                "fold_std", "runtime_minutes", "within_budget",
+            ] if column in quick
+        ]
+        quick_html = table(quick[quick_columns])
+    if QUICK_B002_METRICS_PATH.exists():
+        quick_metrics = json.loads(QUICK_B002_METRICS_PATH.read_text(encoding="utf-8"))
+        share = 100 * quick_metrics.get("bottleneck_share", 0.0)
+        quick_note = (
+            f"B002는 {quick_metrics['runtime_minutes']:.2f}분에 완료됐고, "
+            f"모델 학습과 validation 예측이 전체 시간의 {share:.1f}%를 차지했습니다. "
+            "빠른 점수는 방향 선별용이며 상위 후보만 전체 데이터 정식 5-Fold로 재검증합니다."
+        )
     missing_residual_html = ""
     if diagnostic:
         pattern_shift = pd.DataFrame(diagnostic["missing_pattern_shift"])
@@ -405,6 +426,12 @@ def render_report(result: dict) -> str:
       <article class="roadmap-item"><span class="status later">이후</span><div><b>7. 앙상블과 Kaggle 제출</b><p>OOF에서 실제 개선된 모델만 결합하고 제출 형식, 공개 점수와 로컬 검증 차이를 확인합니다.</p></div></article>
       <article class="roadmap-item"><span class="status later">반복</span><div><b>8. 결과 해석과 새 가설</b><p>어느 구간이 개선·악화됐는지 확인하고, 근거가 생긴 다음 단일 변경 실험으로 돌아갑니다.</p></div></article>
     </div></section>
+
+    <section id="quick-protocol"><h2>5분 빠른 실험 프로토콜</h2>
+      <div class="card callout"><p><b>quick-v1:</b> 타깃 10분위와 에피소드 길이·게스트 인기도 결측 조합을 유지한 고정 75,000행에서 seed 326의 동일한 5-Fold를 사용합니다. CatBoost는 최대 200회이며 test 예측은 생략합니다.</p></div>
+      {quick_html}
+      <p class="muted">{quick_note}</p>
+    </section>
 
     <section class="card callout"><h2>현재 결론</h2><p><b>{current_conclusion}</b> 길이가 길수록 청취시간이 거의 선형적으로 증가하지만, 길이 결측과 test 극단값을 별도로 다뤄야 합니다.</p></section>
 
