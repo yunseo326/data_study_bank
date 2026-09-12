@@ -20,6 +20,7 @@ from model_podcast import (
     validate_data_contract,
     validate_predictions,
 )
+from analyze_missing_residuals import add_missing_pattern, missing_pattern_shift, summarize_groups
 
 
 class PodcastFrameworkTests(unittest.TestCase):
@@ -105,6 +106,36 @@ class PodcastFrameworkTests(unittest.TestCase):
             self.train, self.train[TARGET], self.train[TARGET].to_numpy(),
         )
         self.assertIsInstance(values, list)
+
+    def test_missing_pattern_labels_and_shift_are_explicit(self):
+        train = add_missing_pattern(self.train)
+        test = add_missing_pattern(self.test)
+        self.assertEqual(train.loc[0, "missing_pattern"], "L+ / G+ / A+")
+        self.assertEqual(train.loc[1, "missing_pattern"], "L- / G- / A+")
+        shift = missing_pattern_shift(train, test)
+        self.assertAlmostEqual(float(shift["gap_percentage_points"].abs().sum()), 0.0)
+
+    def test_residual_group_summary_uses_actual_minus_prediction(self):
+        frame = pd.DataFrame({
+            TARGET: [10.0, 20.0, 30.0, 40.0],
+            "prediction": [8.0, 22.0, 27.0, 41.0],
+            "residual": [2.0, -2.0, 3.0, -1.0],
+            "group": ["A", "A", "B", "B"],
+        })
+        summary = summarize_groups(frame, "group", minimum_rows=1).set_index("group")
+        self.assertAlmostEqual(summary.loc["A", "bias"], 0.0)
+        self.assertAlmostEqual(summary.loc["B", "bias"], 1.0)
+
+    def test_published_report_explains_features_objective_and_roadmap(self):
+        report = (PROJECT_ROOT / "docs" / "index.html").read_text(encoding="utf-8")
+        source = (PROJECT_ROOT / "src" / "eda_podcast.py").read_text(encoding="utf-8")
+        for page in (report, source):
+            self.assertIn('id="objective"', page)
+            self.assertIn("작을수록 좋음 · 최저 0", page)
+            self.assertIn('id="features"', page)
+            self.assertIn("사용할 표현과 interaction 후보", page)
+            self.assertIn('id="roadmap"', page)
+            self.assertIn("현재 위치:", page)
 
 
 if __name__ == "__main__":

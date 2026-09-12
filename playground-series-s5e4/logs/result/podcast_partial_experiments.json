@@ -1,0 +1,14 @@
+[
+  {
+    "experiment_id": "E401",
+    "status": "사용자 요청으로 중단",
+    "completed_folds": 2,
+    "planned_folds": 5,
+    "fold_scores": [13.008906, 13.010386],
+    "baseline_fold_scores": [13.037341, 13.038152],
+    "partial_rmse": 13.009646,
+    "baseline_partial_rmse": 13.037747,
+    "partial_improvement": 0.028100,
+    "interpretation": "두 fold 모두 개선됐지만 5-Fold가 끝나지 않아 잠정 결과이며 채택 판단에 사용하지 않음"
+  }
+]

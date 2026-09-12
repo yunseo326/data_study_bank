@@ -141,5 +141,558 @@
       "기준": "TV",
       "차이": 0.0005519999999999969
     }
-  ]
+  ],
+  "missing_residual": {
+    "base_id": "B002",
+    "missing_pattern_shift": [
+      {
+        "missing_pattern": "L+ / G+ / A+",
+        "train_rows": 539048,
+        "train_rate": 0.7187306666666666,
+        "test_rate": 0.719336,
+        "gap_percentage_points": 0.06053333333333466
+      },
+      {
+        "missing_pattern": "L+ / G- / A+",
+        "train_rows": 123858,
+        "train_rate": 0.165144,
+        "test_rate": 0.16572,
+        "gap_percentage_points": 0.05759999999999932
+      },
+      {
+        "missing_pattern": "L- / G+ / A+",
+        "train_rows": 64921,
+        "train_rate": 0.08656133333333334,
+        "test_rate": 0.085336,
+        "gap_percentage_points": -0.12253333333333422
+      },
+      {
+        "missing_pattern": "L- / G- / A+",
+        "train_rows": 22172,
+        "train_rate": 0.029562666666666668,
+        "test_rate": 0.029608,
+        "gap_percentage_points": 0.0045333333333331255
+      },
+      {
+        "missing_pattern": "L+ / G+ / A-",
+        "train_rows": 1,
+        "train_rate": 1.3333333333333334e-06,
+        "test_rate": 0.0,
+        "gap_percentage_points": -0.00013333333333333334
+      }
+    ],
+    "missing_pattern_residuals": [
+      {
+        "missing_pattern": "L- / G+ / A+",
+        "rows": 64921,
+        "target_mean": 42.688890492906765,
+        "prediction_mean": 42.54408251559763,
+        "bias": 0.14480797730912986,
+        "mae": 21.294158079439516,
+        "rmse": 25.79316509440141,
+        "residual_std": 25.792957250316956,
+        "share": 0.08656133333333334
+      },
+      {
+        "missing_pattern": "L- / G- / A+",
+        "rows": 22172,
+        "target_mean": 44.49834215857839,
+        "prediction_mean": 44.29536991707288,
+        "bias": 0.2029722415055047,
+        "mae": 19.692324083493514,
+        "rmse": 23.845412277776756,
+        "residual_std": 23.845086147647425,
+        "share": 0.029562666666666668
+      },
+      {
+        "missing_pattern": "L+ / G+ / A+",
+        "rows": 539048,
+        "target_mean": 45.811257626482245,
+        "prediction_mean": 45.80741937118765,
+        "bias": 0.0038382552945909914,
+        "mae": 8.081439493194663,
+        "rmse": 10.476402859750403,
+        "residual_std": 10.47641187415408,
+        "share": 0.7187306666666666
+      },
+      {
+        "missing_pattern": "L+ / G- / A+",
+        "rows": 123858,
+        "target_mean": 45.41928069135623,
+        "prediction_mean": 45.41530787173601,
+        "bias": 0.0039728196202238365,
+        "mae": 7.784187358318341,
+        "rmse": 10.152099068834138,
+        "residual_std": 10.152139274552834,
+        "share": 0.165144
+      }
+    ],
+    "missing_count_residuals": [
+      {
+        "missing_count": 2,
+        "rows": 22172,
+        "target_mean": 44.49834215857839,
+        "prediction_mean": 44.29536991707288,
+        "bias": 0.2029722415055047,
+        "mae": 19.692324083493514,
+        "rmse": 23.845412277776756,
+        "residual_std": 23.845086147647425,
+        "share": 0.029562666666666668
+      },
+      {
+        "missing_count": 1,
+        "rows": 188780,
+        "target_mean": 44.48019214281174,
+        "prediction_mean": 44.42778747585994,
+        "bias": 0.05240466695180301,
+        "mae": 12.430194436180383,
+        "rmse": 17.216604926299247,
+        "residual_std": 17.216570769910714,
+        "share": 0.2517066666666667
+      },
+      {
+        "missing_count": 0,
+        "rows": 539048,
+        "target_mean": 45.811257626482245,
+        "prediction_mean": 45.80741937118765,
+        "bias": 0.0038382552945909914,
+        "mae": 8.081439493194663,
+        "rmse": 10.476402859750403,
+        "residual_std": 10.47641187415408,
+        "share": 0.7187306666666666
+      }
+    ],
+    "length_missingness_drivers": [
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Episode_Title",
+        "groups": 100,
+        "train_rate_min": 0.09206642066420664,
+        "train_rate_max": 0.1398176291793313,
+        "train_rate_range": 0.047751208515124655,
+        "train_test_group_rate_correlation": 0.6927882966003125
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Podcast_Name",
+        "groups": 48,
+        "train_rate_min": 0.10266869469026549,
+        "train_rate_max": 0.12751221322119843,
+        "train_rate_range": 0.024843518530932945,
+        "train_test_group_rate_correlation": 0.7549872269022211
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Genre",
+        "groups": 10,
+        "train_rate_min": 0.11031881738033737,
+        "train_rate_max": 0.12065247634947134,
+        "train_rate_range": 0.010333658969133963,
+        "train_test_group_rate_correlation": 0.8998611601790611
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Publication_Day",
+        "groups": 7,
+        "train_rate_min": 0.11224442658240713,
+        "train_rate_max": 0.12085257331580074,
+        "train_rate_range": 0.008608146733393607,
+        "train_test_group_rate_correlation": 0.930763390072419
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Number_of_Ads",
+        "groups": 4,
+        "train_rate_min": 0.11280303172195064,
+        "train_rate_max": 0.12074432883561896,
+        "train_rate_range": 0.007941297113668325,
+        "train_test_group_rate_correlation": 0.8863658687994009
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Publication_Time",
+        "groups": 4,
+        "train_rate_min": 0.11317329256434325,
+        "train_rate_max": 0.11919623246738653,
+        "train_rate_range": 0.006022939903043284,
+        "train_test_group_rate_correlation": 0.9576718302786265
+      },
+      {
+        "missing_column": "Episode_Length_minutes",
+        "feature": "Episode_Sentiment",
+        "groups": 3,
+        "train_rate_min": 0.11431895600441395,
+        "train_rate_max": 0.11973386217632838,
+        "train_rate_range": 0.005414906171914424,
+        "train_test_group_rate_correlation": 0.7968769110938241
+      }
+    ],
+    "guest_missingness_drivers": [
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Episode_Title",
+        "groups": 100,
+        "train_rate_min": 0.15058324496288442,
+        "train_rate_max": 0.2482840943002089,
+        "train_rate_range": 0.09770084933732448,
+        "train_test_group_rate_correlation": 0.8650568198781313
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Podcast_Name",
+        "groups": 48,
+        "train_rate_min": 0.15959426204909669,
+        "train_rate_max": 0.24865666110802298,
+        "train_rate_range": 0.0890623990589263,
+        "train_test_group_rate_correlation": 0.9387119696438389
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Number_of_Ads",
+        "groups": 4,
+        "train_rate_min": 0.17212207278961456,
+        "train_rate_max": 0.22788484950647112,
+        "train_rate_range": 0.05576277671685656,
+        "train_test_group_rate_correlation": 0.9958309300189895
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Genre",
+        "groups": 10,
+        "train_rate_min": 0.18188403128184352,
+        "train_rate_max": 0.20967413441955193,
+        "train_rate_range": 0.02779010313770841,
+        "train_test_group_rate_correlation": 0.9770897137164811
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Publication_Day",
+        "groups": 7,
+        "train_rate_min": 0.1886069505104365,
+        "train_rate_max": 0.20503357325733057,
+        "train_rate_range": 0.016426622746894076,
+        "train_test_group_rate_correlation": 0.9400540454290526
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Publication_Time",
+        "groups": 4,
+        "train_rate_min": 0.18644748004815875,
+        "train_rate_max": 0.20093677532715626,
+        "train_rate_range": 0.014489295278997505,
+        "train_test_group_rate_correlation": 0.9696604971965649
+      },
+      {
+        "missing_column": "Guest_Popularity_percentage",
+        "feature": "Episode_Sentiment",
+        "groups": 3,
+        "train_rate_min": 0.19376249532368167,
+        "train_rate_max": 0.19624260319709022,
+        "train_rate_range": 0.002480107873408549,
+        "train_test_group_rate_correlation": 0.9762930865496131
+      }
+    ],
+    "length_missing_squared_error_share": 0.4368556503596242,
+    "prediction_deciles": [
+      {
+        "prediction_decile": "D1",
+        "rows": 75000,
+        "target_mean": 7.312669172266667,
+        "prediction_mean": 7.310761633356964,
+        "bias": 0.0019075389097040552,
+        "mae": 3.0931868196283667,
+        "rmse": 3.9812633217181737,
+        "residual_std": 3.9812894067573334,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D2",
+        "rows": 75000,
+        "target_mean": 17.784093086400002,
+        "prediction_mean": 17.790267311838114,
+        "bias": -0.006174225438112718,
+        "mae": 4.56037944837539,
+        "rmse": 5.524350481191537,
+        "residual_std": 5.524383860263718,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D3",
+        "rows": 75000,
+        "target_mean": 26.599834527333332,
+        "prediction_mean": 26.590563167202923,
+        "bias": 0.009271360130409101,
+        "mae": 5.7316118878482625,
+        "rmse": 7.171484344209425,
+        "residual_std": 7.171526161491393,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D4",
+        "rows": 75000,
+        "target_mean": 35.2537710072,
+        "prediction_mean": 35.360080063393454,
+        "bias": -0.10630905619345277,
+        "mae": 9.250574422489613,
+        "rmse": 13.143606374425785,
+        "residual_std": 13.14326406119451,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D5",
+        "rows": 75000,
+        "target_mean": 41.62999736733334,
+        "prediction_mean": 41.61487545040255,
+        "bias": 0.015121916930785082,
+        "mae": 13.489603356208567,
+        "rmse": 18.243685783016947,
+        "residual_std": 18.24380114159728,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D6",
+        "rows": 75000,
+        "target_mean": 47.146043406666664,
+        "prediction_mean": 46.98432821389665,
+        "bias": 0.16171519277001242,
+        "mae": 12.278296571716476,
+        "rmse": 16.79114787736929,
+        "residual_std": 16.79048105841022,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D7",
+        "rows": 75000,
+        "target_mean": 54.461570813866665,
+        "prediction_mean": 54.32353873083383,
+        "bias": 0.13803208303283448,
+        "mae": 10.666266768970853,
+        "rmse": 14.009196601120411,
+        "residual_std": 14.00860996321923,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D8",
+        "rows": 75000,
+        "target_mean": 64.5358283432,
+        "prediction_mean": 64.57535057118898,
+        "bias": -0.03952222798898194,
+        "mae": 10.48197491995188,
+        "rmse": 12.582864907209615,
+        "residual_std": 12.58288672445339,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D9",
+        "rows": 75000,
+        "target_mean": 74.0447295868,
+        "prediction_mean": 74.09659833758461,
+        "bias": -0.05186875078461257,
+        "mae": 11.951502984493747,
+        "rmse": 14.230735925250638,
+        "residual_std": 14.230736270187835,
+        "share": 0.1
+      },
+      {
+        "prediction_decile": "D10",
+        "rows": 75000,
+        "target_mean": 85.60552557026666,
+        "prediction_mean": 85.50820263622379,
+        "bias": 0.0973229340428829,
+        "mae": 13.689590969236132,
+        "rmse": 16.143008465312175,
+        "residual_std": 16.1428227116776,
+        "share": 0.1
+      }
+    ],
+    "residual_drivers_all": [
+      {
+        "feature": "Episode_Title",
+        "eligible_groups": 100,
+        "mean_residual_range": 1.7520822549496247,
+        "lowest_group": "Episode 4",
+        "lowest_bias": -0.8798074069176582,
+        "highest_group": "Episode 70",
+        "highest_bias": 0.8722748480319664
+      },
+      {
+        "feature": "Podcast_Name",
+        "eligible_groups": 48,
+        "mean_residual_range": 1.119983228126519,
+        "lowest_group": "Sport Spot",
+        "lowest_bias": -0.4376434523066915,
+        "highest_group": "Gadget Geek",
+        "highest_bias": 0.6823397758198274
+      },
+      {
+        "feature": "Genre",
+        "eligible_groups": 10,
+        "mean_residual_range": 0.3411736390563106,
+        "lowest_group": "Sports",
+        "lowest_bias": -0.15587734606567566,
+        "highest_group": "True Crime",
+        "highest_bias": 0.18529629299063494
+      },
+      {
+        "feature": "Publication_Day",
+        "eligible_groups": 7,
+        "mean_residual_range": 0.19189718566291017,
+        "lowest_group": "Sunday",
+        "lowest_bias": -0.06171849611807042,
+        "highest_group": "Thursday",
+        "highest_bias": 0.13017868954483974
+      },
+      {
+        "feature": "Episode_Sentiment",
+        "eligible_groups": 3,
+        "mean_residual_range": 0.12010268051379976,
+        "lowest_group": "Neutral",
+        "lowest_bias": -0.04656906011452126,
+        "highest_group": "Positive",
+        "highest_bias": 0.0735336203992785
+      },
+      {
+        "feature": "Publication_Time",
+        "eligible_groups": 4,
+        "mean_residual_range": 0.1072611246928333,
+        "lowest_group": "Evening",
+        "lowest_bias": -0.04254496238849414,
+        "highest_group": "Night",
+        "highest_bias": 0.06471616230433916
+      },
+      {
+        "feature": "Number_of_Ads",
+        "eligible_groups": 4,
+        "mean_residual_range": 0.050385625984997226,
+        "lowest_group": "3.0",
+        "lowest_bias": 0.002379535958380408,
+        "highest_group": "2.0",
+        "highest_bias": 0.05276516194337763
+      }
+    ],
+    "residual_drivers_length_missing": [
+      {
+        "feature": "Episode_Title",
+        "eligible_groups": 100,
+        "mean_residual_range": 5.737216643331799,
+        "lowest_group": "Episode 52",
+        "lowest_bias": -2.7864391665672956,
+        "highest_group": "Episode 67",
+        "highest_bias": 2.950777476764503
+      },
+      {
+        "feature": "Podcast_Name",
+        "eligible_groups": 48,
+        "mean_residual_range": 2.617303463634086,
+        "lowest_group": "Sound Waves",
+        "lowest_bias": -0.8753908119939872,
+        "highest_group": "Mystery Matters",
+        "highest_bias": 1.741912651640099
+      },
+      {
+        "feature": "Publication_Day",
+        "eligible_groups": 7,
+        "mean_residual_range": 0.8474862061744398,
+        "lowest_group": "Sunday",
+        "lowest_bias": -0.271815597902194,
+        "highest_group": "Saturday",
+        "highest_bias": 0.5756706082722458
+      },
+      {
+        "feature": "Genre",
+        "eligible_groups": 10,
+        "mean_residual_range": 0.8451671145345525,
+        "lowest_group": "Technology",
+        "lowest_bias": -0.18938070433834012,
+        "highest_group": "Business",
+        "highest_bias": 0.6557864101962124
+      },
+      {
+        "feature": "Publication_Time",
+        "eligible_groups": 4,
+        "mean_residual_range": 0.44911844397832695,
+        "lowest_group": "Afternoon",
+        "lowest_bias": -0.04654112285779512,
+        "highest_group": "Morning",
+        "highest_bias": 0.40257732112053185
+      },
+      {
+        "feature": "Number_of_Ads",
+        "eligible_groups": 4,
+        "mean_residual_range": 0.4131347318797652,
+        "lowest_group": "3.0",
+        "lowest_bias": -0.011732743711337522,
+        "highest_group": "2.0",
+        "highest_bias": 0.40140198816842765
+      },
+      {
+        "feature": "Episode_Sentiment",
+        "eligible_groups": 3,
+        "mean_residual_range": 0.2487267147419653,
+        "lowest_group": "Neutral",
+        "lowest_bias": -0.0029502375763930167,
+        "highest_group": "Positive",
+        "highest_bias": 0.2457764771655723
+      }
+    ],
+    "group_length_imputation": {
+      "observed_rows": 662907,
+      "observed_length_mae": 28.566356235748916,
+      "observed_length_rmse": 33.297713523610554,
+      "observed_length_baseline_rmse": 32.97627913216238,
+      "missing_rows": 87093,
+      "missing_imputation_coverage": 1.0,
+      "missing_imputed_length_target_correlation": 0.06483781371580291,
+      "missing_quintiles": [
+        {
+          "quintile": "Q1",
+          "rows": 17433,
+          "imputed_length_mean": 52.83490178877273,
+          "target_mean": 40.51519842425285
+        },
+        {
+          "quintile": "Q2",
+          "rows": 17497,
+          "imputed_length_mean": 60.258680957110926,
+          "target_mean": 42.25771046465108
+        },
+        {
+          "quintile": "Q3",
+          "rows": 17335,
+          "imputed_length_mean": 63.881071909606234,
+          "target_mean": 43.57869855148543
+        },
+        {
+          "quintile": "Q4",
+          "rows": 17418,
+          "imputed_length_mean": 67.62520807072482,
+          "target_mean": 44.167746418647376
+        },
+        {
+          "quintile": "Q5",
+          "rows": 17410,
+          "imputed_length_mean": 74.42068038911086,
+          "target_mean": 45.237653152785754
+        }
+      ]
+    },
+    "experiment_comparison": [
+      {
+        "experiment_id": "B002",
+        "overall_rmse": 13.049999410181654,
+        "length_present_rmse": 10.416568801311644,
+        "length_missing_rmse": 25.31153463393647,
+        "overall_bias": 0.021949676541146802,
+        "length_missing_bias": 0.1596153449019562
+      },
+      {
+        "experiment_id": "E201",
+        "overall_rmse": 13.04971002530649,
+        "length_present_rmse": 10.417174300896491,
+        "length_missing_rmse": 25.308352902836372,
+        "overall_bias": 0.02280848487210073,
+        "length_missing_bias": 0.18463145409682266
+      }
+    ]
+  }
 }
