@@ -22,6 +22,7 @@ class PortfolioBuildTests(unittest.TestCase):
         self.assertIn('href="playground-series-s5e4/"', page)
         self.assertIn('href="playground-series-s5e6/"', page)
         self.assertIn('href="kamp_data_1/"', page)
+        self.assertIn('href="welding-manufacturing/"', page)
         self.assertIn('href="https://yunseo326.github.io/"', page)
         self.assertIn("@media(max-width:620px)", page)
 
@@ -35,7 +36,7 @@ class PortfolioBuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             sources = {}
-            for slug in ["bank", "playground-series-s5e4", "playground-series-s5e6", "kamp_data_1"]:
+            for slug in ["bank", "playground-series-s5e4", "playground-series-s5e6", "kamp_data_1", "welding-manufacturing"]:
                 source = root / "sources" / slug / "index.html"
                 source.parent.mkdir(parents=True, exist_ok=True)
                 source.write_text(f"<html><body>{slug}</body></html>", encoding="utf-8")

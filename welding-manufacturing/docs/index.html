@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="로봇용접 데이터 11,939행의 기초 분석, 불량 라벨 해석, 다음 분석 단계">
+  <meta name="theme-color" content="#140d0b">
+  <title>용접 데이터 기초 분석 · Data Study Bank</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./report.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <section class="hero report-hero" aria-labelledby="page-title">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Data Study Bank 전체 대회 목록">
+        <span class="count" aria-hidden="true">04</span>
+        <span class="brand-label">DATA STUDY<br>WELDING</span>
+      </a>
+      <nav class="nav-links" aria-label="보고서 목차">
+        <a href="#overview">데이터</a>
+        <a href="#labels">라벨</a>
+        <a href="#findings">발견</a>
+        <a href="#next">다음 단계</a>
+      </nav>
+    </header>
+    <div class="hero-content report-intro">
+      <p class="eyebrow">KAMP DATASET · EXPLORATORY REPORT · 2026.09.21</p>
+      <h1 id="page-title"><span>용접 데이터,</span><span class="accent">어디까지</span><span>말할 수 있나</span></h1>
+      <p class="hero-lead">11,939개의 측정값과 23개의 불량 집계. 두 자료의 단위를 구분하는 것이 예측 모델보다 먼저입니다.</p>
+      <a class="explore" href="#overview">분석 결과 보기 <span class="explore-arrow" aria-hidden="true">↘</span></a>
+    </div>
+    <div class="hero-index" aria-label="핵심 수치">
+      <div><strong>11,939</strong><span>측정 행</span></div>
+      <div><strong>0</strong><span>원본 측정 결측</span></div>
+      <div><strong>23</strong><span>불량 집계 행</span></div>
+      <div><strong>미제공</strong><span>행 단위 정답</span></div>
+    </div>
+  </section>
+
+  <main id="main-content" class="projects report-main">
+    <div class="projects-inner">
+      <section id="overview" class="report-section" aria-labelledby="overview-title">
+        <div class="section-head"><div><p class="section-kicker">01 / DATA UNDERSTANDING</p><h2 id="overview-title">같은 파일, 다른 단위</h2></div><span class="section-count">FULL DATA · NO SAMPLING</span></div>
+        <p class="section-lead">Excel의 <code>Raw data</code>는 용접 측정 한 행씩, <code>result</code>는 날짜와 불량 유형별 한 행씩 기록합니다. 공통 날짜만으로 두 자료를 개별 용접 수준에서 결합할 수 없습니다.</p>
+        <div class="grain-grid">
+          <article class="grain-card"><span class="grain-no">A / INPUT</span><h3>Raw data</h3><p class="grain-stat">11,939 <small>행 × 10열</small></p><p>가압력, 전류, 전압, 통전시간과 두께를 포함한 측정 기록. 날짜는 9개입니다.</p></article>
+          <div class="grain-divider" aria-hidden="true">≠</div>
+          <article class="grain-card"><span class="grain-no">B / RESULT</span><h3>result</h3><p class="grain-stat">23 <small>행 × 7열</small></p><p>날짜·유형별 <code>defect</code> 숫자. 측정 행과 연결되는 고유키가 없습니다.</p></article>
+        </div>
+        <aside class="callout"><span class="callout-label">현재의 결론</span><p><strong>개별 용접 불량 예측은 아직 실행할 수 없습니다.</strong> 23행의 수치를 11,939행에 복제하면 실제로 없는 정답을 만들어 학습하게 됩니다.</p></aside>
+        <div class="overview-grid">
+          <div class="detail-card"><h3>관측 범위</h3><p>2020년 3월 24일부터 4월 7일까지 9개 날짜. 설비는 <code>Spot-01</code>, 품목은 <code>65235-25800</code> 하나씩이며 두께 두 열은 모두 0.7 mm입니다.</p></div>
+          <div class="detail-card"><h3>파일 처리 규모</h3><p>전체 Excel과 CSV를 읽고 기본 품질 진단까지 수행한 3회 측정의 중간값은 <strong>4.656초</strong>였습니다. 현재 EDA에서 표본 추출은 필요하지 않습니다. 모델 학습 시간은 미측정입니다.</p></div>
+        </div>
+      </section>
+
+      <section id="labels" class="report-section" aria-labelledby="labels-title">
+        <div class="section-head"><div><p class="section-kicker">02 / LABEL INTERPRETATION</p><h2 id="labels-title">라벨은 무엇을 뜻하나</h2></div><span class="section-count">FACTS ≠ ASSUMPTIONS</span></div>
+        <p class="section-lead"><code>defect type</code>의 코드와 이름은 원본 시트에서 직접 확인됩니다. <code>defect</code> 숫자의 단위와 집계 규칙은 설명되지 않았습니다.</p>
+        <div class="table-wrap"><table><caption>원본 result 시트 F2:G4에 기록된 불량 유형</caption><thead><tr><th scope="col">코드</th><th scope="col">원본 이름</th><th scope="col">말뜻 수준의 설명</th><th scope="col">확인되지 않은 기준</th></tr></thead><tbody><tr><th scope="row">1</th><td>파임불량</td><td>용접 부위가 파이거나 움푹해진 상태를 가리키는 이름</td><td>파임 깊이·위치·검사 기준</td></tr><tr><th scope="row">2</th><td>용접부족</td><td>용접이 충분하지 않다는 뜻의 이름</td><td>강도·용접량 기준</td></tr><tr><th scope="row">3</th><td>크랙발생</td><td>균열이 발생했다는 뜻의 이름</td><td>균열 크기·위치·검사 방법</td></tr></tbody></table></div>
+        <div class="result-grid">
+          <article class="result-card"><span>기록된 값</span><strong>0, 1, 2, 3</strong><p><code>defect</code> 열의 실제 값. 0은 정상 측정 한 행, 1은 불량 측정 한 행이라는 뜻으로 확인되지 않았습니다.</p></article>
+          <article class="result-card"><span>값의 합</span><strong>39</strong><p>23개 결과 행에 적힌 숫자를 더한 값. 검사 모집단과 집계 정의가 없으므로 확정된 불량품 수나 불량률로 부르지 않습니다.</p></article>
+          <article class="result-card"><span>미기록</span><strong>2가지</strong><p>3월 27일은 결과 행 전체가 없고, 3월 31일은 유형 3 행이 없습니다. 행 부재를 0으로 채우지 않습니다.</p></article>
+        </div>
+        <p class="note">유형별 <code>defect</code> 값의 합은 코드 1이 14, 코드 2가 13, 코드 3이 12입니다. 이는 기록된 수치의 합이며 유형별 확정 불량 건수는 아닙니다.</p>
+        <div class="example-box"><p class="example-kicker">값 읽기 예시</p><p><strong>2020-03-24 · 유형 1 · <code>defect=2</code></strong>는 그 날짜의 파임불량 유형 행에 숫자 2가 있다는 뜻까지 확인됩니다. 특정 측정 2건의 불량, 2%의 불량률, 심각도 2단계 중 어느 의미인지는 알 수 없습니다.</p></div>
+      </section>
+
+      <section id="findings" class="report-section" aria-labelledby="findings-title">
+        <div class="section-head"><div><p class="section-kicker">03 / BASIC EDA</p><h2 id="findings-title">기초 진단 결과</h2></div><span class="section-count">11,939 / 11,939 ROWS</span></div>
+        <div class="finding-grid"><article class="finding"><span class="finding-number">00</span><h3>측정값 결측</h3><p>원본 10열에 빈 셀이 없습니다. 결측 대체는 필요하지 않습니다.</p></article><article class="finding"><span class="finding-number">71</span><h3>변환 CSV 결측 행</h3><p>가압력 18, 전류 15, 전압 15, 통전시간 23개의 빈 값이 있습니다. 변환식과 원본 행 대응도 미확인입니다.</p></article><article class="finding"><span class="finding-number">01</span><h3>키 충돌</h3><p>2020-03-25의 <code>idx=1</code>에 서로 다른 측정 두 행이 있습니다. 날짜와 idx의 조합도 고유키가 아닙니다.</p></article></div>
+        <h3 class="subhead">측정값의 범위</h3>
+        <div class="table-wrap"><table><caption>원본 측정값의 사분위수. IQR 후보는 오류나 불량 판정이 아닙니다.</caption><thead><tr><th scope="col">변수</th><th scope="col">최소</th><th scope="col">중앙값</th><th scope="col">최대</th><th scope="col">IQR 후보</th><th scope="col">수집 범위 초과</th></tr></thead><tbody><tr><th scope="row">가압력 (bar)</th><td>1.74</td><td>2.34</td><td>10.54</td><td>1,496</td><td>0</td></tr><tr><th scope="row">전류 (kA)</th><td>14.52</td><td>14.73</td><td>15.07</td><td>186</td><td>0</td></tr><tr><th scope="row">전압 (V)</th><td>2.464</td><td>2.702</td><td>2.861</td><td>1,180</td><td>0</td></tr><tr><th scope="row">통전시간 (ms)</th><td>70</td><td>72</td><td>73</td><td>0</td><td>0</td></tr></tbody></table></div>
+        <div class="chart-panel"><div class="chart-copy"><p class="section-kicker">PROCESS PATTERN</p><h3>고가압력 기록이 네 날짜에 집중</h3><p>5 bar 초과 측정은 전체 972행이며, 아래 네 날짜에 각각 243행씩 있습니다. 날짜별 작업 설정 또는 데이터 생성 과정을 확인할 단서입니다. 불량의 원인이라는 결론은 아닙니다.</p></div><div class="bar-chart" role="img" aria-label="가압력 5 bar 초과 측정: 2020년 3월 25일, 3월 27일, 3월 31일, 4월 3일 각각 243행. 다른 날짜는 0행."><div class="bar-row"><span>03.25</span><div class="bar-track"><div class="bar-fill"></div></div><b>243</b></div><div class="bar-row"><span>03.27</span><div class="bar-track"><div class="bar-fill"></div></div><b>243</b></div><div class="bar-row"><span>03.31</span><div class="bar-track"><div class="bar-fill"></div></div><b>243</b></div><div class="bar-row"><span>04.03</span><div class="bar-track"><div class="bar-fill"></div></div><b>243</b></div><p class="chart-note">가압력 &gt;5 bar · 해당 날짜별 측정 행 수</p></div></div>
+        <p class="note">원본의 동일한 전체 행은 0개입니다. <code>idx</code>를 제외하면 같은 측정값 조합이 5,081행에서 반복되지만, 반복 생산일 수 있어 임의로 삭제하지 않았습니다. 모든 측정 변수는 Excel <code>data set</code> 시트의 수집 범위 안에 있습니다.</p>
+      </section>
+
+      <section id="next" class="report-section" aria-labelledby="next-title">
+        <div class="section-head"><div><p class="section-kicker">04 / DECISION PATH</p><h2 id="next-title">다음은 무엇을 확인하나</h2></div><span class="section-count">BEFORE BASELINE</span></div>
+        <ol class="roadmap"><li><span class="road-no">01</span><div><h3>정답의 단위를 확인한다</h3><p>개별 측정 행과 검사 결과를 연결하는 고유키, 검사 시점, <code>defect</code>의 단위·집계 규칙, 빠진 날짜·유형의 의미를 확보합니다.</p></div><span class="road-state">필수</span></li><li><span class="road-no">02</span><div><h3>검증 기준을 고정한다</h3><p>날짜별 생산 기록과 중복 조건을 고려해 시간·그룹 누수를 점검합니다. target, metric, Primary Validation을 첫 공식 실험 전에 확정합니다.</p></div><span class="road-state">정답 확보 후</span></li><li><span class="road-no">03</span><div><h3>동일 조건에서 모델을 비교한다</h3><p>대회 요구에 맞춰 베이스라인 포함 두 개 이상을 같은 검증 기준으로 비교합니다. 모델의 실패조건과 False Negative/Positive는 검증 예측으로 분석합니다.</p></div><span class="road-state">검증 확정 후</span></li><li><span class="road-no">04</span><div><h3>안정 공정조건을 제안한다</h3><p>관측 범위와 표본 수, 상호작용, 예측 불확실성을 함께 제시합니다. 품질과 연결된 근거 없이 저위험 설정을 확정하지 않습니다.</p></div><span class="road-state">모델 검증 후</span></li></ol>
+        <aside class="callout callout-final"><span class="callout-label">현재 상태</span><p>이 보고서는 <strong>전 행 탐색 결과</strong>입니다. 모델 성능, 불량률, 공정 최적 범위는 아직 산출하지 않았습니다. 현재 파일만으로 계산하면 근거가 부족합니다.</p></aside>
+      </section>
+
+      <footer class="report-footer"><span>DATA STUDY BANK · WELDING DATA</span><span>원본: Welding Data Set_01.xlsx · scaled_data.csv</span><a href="../">전체 대회 목록으로 돌아가기 ↗</a></footer>
+    </div>
+  </main>
+</body>
+</html>
