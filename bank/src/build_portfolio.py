@@ -1,4 +1,4 @@
-"""Assemble the three competition reports into the repository GitHub Pages tree."""
+"""Assemble competition reports into the repository GitHub Pages tree."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ REPORTS = {
     "bank": ROOT / "bank" / "docs" / "index.html",
     "playground-series-s5e4": ROOT / "playground-series-s5e4" / "docs" / "index.html",
     "playground-series-s5e6": ROOT / "playground-series-s5e6" / "docs" / "index.html",
+    "kamp_data_1": ROOT / "kamp_data_1" / "docs" / "index.html",
 }
 
 
@@ -20,26 +21,27 @@ def homepage_html() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Kaggle 데이터 분석 학습 기록">
-  <title>Data Study · Kaggle 대회 학습 기록</title>
+  <meta name="description" content="데이터 분석 대회 학습 기록">
+  <title>Data Study · 데이터 분석 대회 기록</title>
   <style>
     :root{--ink:#10273f;--muted:#5c7081;--paper:#f3f7fa;--card:#fff;--line:#d7e2e9;--blue:#176b9c;--cyan:#27a8a1}
     *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 Inter,"Noto Sans KR",system-ui,sans-serif}
     main{width:min(1080px,calc(100% - 32px));margin:auto;padding:56px 0 80px}.eyebrow{font-size:.82rem;font-weight:800;letter-spacing:.1em;color:var(--blue)}
     h1{font-size:clamp(2.5rem,7vw,5.2rem);line-height:1;letter-spacing:-.06em;margin:.5rem 0 1rem}.lead{max-width:760px;color:var(--muted);font-size:1.12rem}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 9px 28px rgba(16,39,63,.05);transition:.18s ease}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:42px}.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 9px 28px rgba(16,39,63,.05);transition:.18s ease}
     .card:hover,.card:focus-visible{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 13px 34px rgba(16,39,63,.1)}.tag{font-size:.78rem;color:var(--blue);font-weight:800}.card h2{font-size:1.4rem;line-height:1.25;margin:.5rem 0}.card p{color:var(--muted);margin:.4rem 0;flex:1}.status{align-self:flex-start;margin-top:14px;padding:4px 9px;border-radius:999px;background:#e4f6f3;color:#08796f;font-size:.75rem;font-weight:800}
     footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}@media(max-width:820px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){main{padding-top:34px}.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body><main>
   <div class="eyebrow">DATA STUDY</div>
-  <h1>Kaggle 대회 학습 기록</h1>
+  <h1>데이터 분석 대회 기록</h1>
   <p class="lead">점수만 기록하지 않고 무엇을 확인했고, 무엇을 발견했으며, 다음 실험을 왜 선택했는지 대회별로 정리합니다.</p>
   <section class="grid" aria-label="대회 리포트">
     <a class="card" href="playground-series-s5e4/"><div class="tag">PLAYGROUND S5E4</div><h2>Podcast Listening Time</h2><p>청취시간 회귀 문제의 결측, 극단값, 강한 길이 관계와 검증 설계를 분석합니다.</p><span class="status">현재 OOF RMSE 13.049970</span></a>
     <a class="card" href="playground-series-s5e6/"><div class="tag">PLAYGROUND S5E6</div><h2>Optimal Fertilizers</h2><p>MAP@3 평가, 비료별 오류 차이와 누수 없는 범주형 모델링을 분석합니다.</p><span class="status">현재 OOF MAP@3 0.309568</span></a>
     <a class="card" href="bank/"><div class="tag">PLAYGROUND S5E8</div><h2>Bank Dataset</h2><p>예측 시점 누수, 고정 OOF 검증과 LightGBM 단일 변경 실험을 분석합니다.</p><span class="status">현재 OOF AUC 0.969283</span></a>
+    <a class="card" href="kamp_data_1/"><div class="tag">KAMP · INJECTION MOLDING</div><h2>사출성형 품질 예측</h2><p>CN7·RG3의 라벨 의미, 중복·충돌 구조와 검증 설계 전 확인 과제를 정리합니다.</p><span class="status">기초 EDA 완료 · 검증 설계 전</span></a>
   </section>
   <footer><a href="https://yunseo326.github.io/">전체 프로젝트로 돌아가기</a> · 원본 데이터는 로컬에만 보관하며 GitHub에는 분석 코드와 요약 결과만 공개합니다.</footer>
 </main></body>
@@ -82,6 +84,10 @@ def publish(pages_dir: Path = PAGES_DIR, reports: dict[str, Path] = REPORTS) -> 
         destination = pages_dir / slug / "index.html"
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(add_home_link(report).rstrip() + "\n", encoding="utf-8")
+        source_dir = selected_reports[slug].parent
+        for asset in source_dir.glob("*.css"):
+            asset_destination = destination.parent / asset.name
+            asset_destination.write_text(asset.read_text(encoding="utf-8"), encoding="utf-8")
         print(f"published {slug}: {selected_reports[slug]} -> {destination}")
 
 

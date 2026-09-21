@@ -7,6 +7,7 @@ on:
       - "bank/docs/**"
       - "playground-series-s5e4/docs/**"
       - "playground-series-s5e6/docs/**"
+      - "kamp_data_1/docs/**"
       - "bank/src/build_portfolio.py"
       - ".github/workflows/publish-reports.yml"
 
