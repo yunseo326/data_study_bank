@@ -22,6 +22,7 @@ class PortfolioBuildTests(unittest.TestCase):
         self.assertIn('href="playground-series-s5e4/"', page)
         self.assertIn('href="playground-series-s5e6/"', page)
         self.assertIn('href="kamp_data_1/"', page)
+        self.assertIn('href="kamp_data_3/"', page)
         self.assertIn('href="welding-manufacturing/"', page)
         self.assertIn('href="https://yunseo326.github.io/"', page)
         self.assertIn("@media(max-width:620px)", page)
@@ -36,11 +37,11 @@ class PortfolioBuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             sources = {}
-            for slug in ["bank", "playground-series-s5e4", "playground-series-s5e6", "kamp_data_1", "welding-manufacturing"]:
+            for slug in ["bank", "playground-series-s5e4", "playground-series-s5e6", "kamp_data_1", "kamp_data_3", "welding-manufacturing"]:
                 source = root / "sources" / slug / "index.html"
                 source.parent.mkdir(parents=True, exist_ok=True)
                 source.write_text(f"<html><body>{slug}</body></html>", encoding="utf-8")
-                if slug == "kamp_data_1":
+                if slug in {"kamp_data_1", "kamp_data_3"}:
                     (source.parent / "report.css").write_text("body { color: #fff; }", encoding="utf-8")
                 sources[slug] = source
             destination = root / "public"
@@ -54,6 +55,17 @@ class PortfolioBuildTests(unittest.TestCase):
                 (destination / "kamp_data_1" / "report.css").read_text(encoding="utf-8"),
                 "body { color: #fff; }",
             )
+            self.assertEqual(
+                (destination / "kamp_data_3" / "report.css").read_text(encoding="utf-8"),
+                "body { color: #fff; }",
+            )
+
+    def test_kamp_data_3_report_covers_required_interpretation(self):
+        report = (ROOT.parent / "kamp_data_3" / "docs" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("F1 1.0", report)
+        self.assertIn("현재 답은 “아직 증명하지 못했다”입니다", report)
+        self.assertIn("0.8947", report)
+        self.assertIn("대회 주제와의 연결", report)
 
     def test_publish_reuses_existing_page_when_source_is_unavailable(self):
         with tempfile.TemporaryDirectory() as directory:

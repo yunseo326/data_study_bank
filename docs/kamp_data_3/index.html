@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="KAMP 소성가공 예지보전 프로젝트의 진행 현황, 모델 성능, F1 1.0의 의미와 미래 예측 가능성을 정리한 보고서">
+  <title>KAMP 프레스 유압펌프 예지보전 · 프로젝트 현황</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="report.css">
+</head>
+<body><a href="../" aria-label="Data Study 전체 대회" style="position:fixed;z-index:20;top:12px;right:16px;padding:8px 12px;border-radius:999px;background:#fff;color:#176b9c;text-decoration:none;font:700 13px/1.2 system-ui;box-shadow:0 3px 14px rgba(16,39,63,.16)">← 전체 대회</a>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+  <header class="masthead"><div class="container masthead-inner">
+    <a class="wordmark" href="../">DATA STUDY <span>/</span> KAMP</a>
+    <nav aria-label="보고서 목차"><a href="#status">진행 현황</a><a href="#models">모델 비교</a><a href="#perfect">F1 1.0</a><a href="#future">미래 예측</a><a href="#next">다음 단계</a></nav>
+  </div></header>
+
+  <main id="main">
+    <section class="intro container" aria-labelledby="title">
+      <div class="eyebrow"><span class="eyebrow-mark"></span> PROJECT REVIEW <span class="muted">/ 2026.09.28</span></div>
+      <div class="intro-grid">
+        <div><p class="kicker">2026 K-인공지능 제조데이터 분석 경진대회</p><h1 id="title">이상은 찾았지만,<br><em>미래</em>를 맞혔다고<br>말할 수 있을까?</h1></div>
+        <div class="intro-aside"><p>프레스 유압펌프 센서 데이터의 누수를 차단해 세 모델을 비교했습니다. 이 보고서는 현재 최고 모델, F1 1.0의 함정, 실제 예지보전으로 가기 위해 남은 검증을 한곳에 정리합니다.</p><a class="text-link" href="#summary">핵심 결론 보기 ↗</a></div>
+      </div>
+      <div class="scope-note"><strong>결론의 범위</strong><span>현재 수치는 620개 연속 구간(정상 599, 이상 21)의 교차검증 결과입니다. 별도 미래 테스트와 고장 시작 시각이 없어 “이상 구간 판정”까지만 검증했으며, 고장 몇 초 전 예측은 주장하지 않습니다.</span></div>
+    </section>
+
+    <section id="summary" class="section alt" aria-labelledby="summary-title"><div class="container">
+      <div class="section-heading"><span class="section-no">01 / 한눈에 보기</span><h2 id="summary-title">현재 최고는 Random Forest.<br><span class="soft">공식 F1은 0.8947입니다.</span></h2></div>
+      <div class="metric-grid">
+        <div class="metric"><span>모델용 관측</span><strong>20,599</strong><small>정확 중복 1행만 view에서 제외</small></div>
+        <div class="metric"><span>공식 최고 F1</span><strong>0.8947</strong><small>E001 Random Forest</small></div>
+        <div class="metric"><span>이상 탐지</span><strong>17 / 21</strong><small>Recall 0.8095 · FN 4</small></div>
+        <div class="metric"><span>5-seed 최저 F1</span><strong>0.8571</strong><small>평균 0.8826 · 표준편차 0.0155</small></div>
+      </div>
+      <p class="takeaway"><span class="asterisk" aria-hidden="true">✳</span><span><strong>핵심 해석</strong> — 누수 방지 조건에서는 이상 구간을 상당히 잘 구분하지만 약한 진동 이상 4개를 놓쳤습니다. 비정식 진단의 F1 1.0은 미래 성능의 증거가 아니라, 검증 방식이 결과를 얼마나 낙관적으로 만들 수 있는지 보여 주는 사례입니다.</span></p>
+    </div></section>
+
+    <section id="status" class="section container" aria-labelledby="status-title">
+      <div class="section-heading"><span class="section-no">02 / 지금 어디까지 왔나</span><h2 id="status-title">데이터 진단부터 후보 선정까지 완료했습니다.</h2><p>대회의 평가 항목과 직접 연결되는 작업을 우선했고, 원본 데이터와 공식 검증 기준은 고정했습니다.</p></div>
+      <div class="progress-list">
+        <article class="progress-card"><span class="state">완료 · DATA</span><h3>데이터 구조와 위험 진단</h3><p>정상 20,000행, 이상 600행을 보존적으로 통합했습니다. 이상 비율 2.91%, 0.1초 연속 구간의 다수 gap, 정상·이상의 수집일 분리, 정확 중복 1개를 확인했습니다.</p></article>
+        <article class="progress-card"><span class="state">완료 · VALIDATION</span><h3>누수 방지 검증 고정</h3><p>시간적으로 붙은 행을 섞지 않고 segment 단위 3-fold로 나눴습니다. timestamp·파일명·행 번호·segment 길이를 feature에서 제외하고 threshold도 각 training fold 안에서만 선택했습니다.</p></article>
+        <article class="progress-card"><span class="state">완료 · MODEL</span><h3>세 가지 공식 모델 비교</h3><p>Logistic Regression, Random Forest, LSTM-Autoencoder를 같은 segment 검증에서 비교했습니다. E001 Random Forest가 최고이며 5개 seed robustness까지 완료했습니다.</p></article>
+        <article class="progress-card"><span class="state">완료 · ERROR</span><h3>미탐·오경보 조건 분석</h3><p>E001의 기준 seed에서 오경보는 0개, 미탐은 4개였습니다. 미탐의 상부 진동 RMS 중앙값은 0.0446으로 탐지된 이상 0.4689보다 현저히 낮았습니다.</p></article>
+        <article class="progress-card"><span class="state">완료 · GUIDEBOOK</span><h3>가이드북 방식 재현 진단</h3><p>raw 100-sample LSTM-Autoencoder를 최대 200 epoch로 실행했고 92 epoch에서 조기 종료했습니다. F1 1.0을 얻었지만 공식 후보 선정에서는 제외했습니다.</p></article>
+        <article class="progress-card"><span class="state">남음 · FIELD POLICY</span><h3>현장 경보 정책 문서화</h3><p>E001의 threshold, 연속 경보 횟수, cooldown, 불확실 구간 재검사 규칙을 확정해야 합니다. 실제 미래 운전 데이터 확보 전에는 정책을 가설로 표시합니다.</p></article>
+      </div>
+    </section>
+
+    <section class="section alt" aria-labelledby="competition-title"><div class="container">
+      <div class="section-heading"><span class="section-no">03 / 대회 주제와의 연결</span><h2 id="competition-title">높은 점수보다 “언제 믿을 수 있는가”를 설명합니다.</h2><p>대회 주제는 진동·전류로 유압펌프 이상을 조기에 탐지하고, 미탐지와 오경보 조건을 분석하는 것입니다.</p></div>
+      <div class="explain-grid">
+        <article class="explain-card"><h3>이상 탐지</h3><p>상부·하부 진동과 전류의 평균, RMS, 변동, 분위수, 추세, 채널 간 상관을 구간별로 요약해 정상과 이상을 구분합니다.</p></article>
+        <article class="explain-card"><h3>오류 조건</h3><p>단순 성능표에서 끝내지 않고 FN 4개가 낮은 진동 강도에 집중된다는 사실을 확인했습니다. 이는 약한 이상을 위한 별도 경보 정책이 필요하다는 뜻입니다.</p></article>
+        <article class="explain-card"><h3>현장 활용</h3><p>낮은 threshold의 ‘주의’와 높은 threshold가 연속된 ‘경보’를 분리하고, cooldown으로 같은 사건의 반복 알림을 묶는 방향을 제안합니다.</p></article>
+        <article class="explain-card"><h3>재현성과 정직한 한계</h3><p>동일 split·metric·threshold 규칙으로 모델을 비교하고, test·onset label이 없다는 사실을 숨기지 않습니다. 조기탐지 시간은 현재 점수에서 도출하지 않습니다.</p></article>
+      </div>
+    </div></section>
+
+    <section id="models" class="section container" aria-labelledby="models-title">
+      <div class="section-heading"><span class="section-no">04 / 공식 모델 비교</span><h2 id="models-title">같은 시험지에서 비교해야<br>모델 차이를 읽을 수 있습니다.</h2><p>아래 세 실험은 `segment-validation-v1`과 positive-class segment F1을 공유합니다. E001이 기준 모델 E000보다 F1 0.1328 높습니다.</p></div>
+      <div class="table-wrap"><table>
+        <caption>공식 실험의 segment 단위 성능 비교</caption>
+        <thead><tr><th scope="col">실험 · 모델</th><th scope="col">F1</th><th scope="col">Precision</th><th scope="col">Recall</th><th scope="col">PR-AUC</th><th scope="col">FP / FN</th><th scope="col">판정</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">E000 · Logistic Regression</th><td>0.7619</td><td>0.7619</td><td>0.7619</td><td>0.8413</td><td>5 / 5</td><td>INCONCLUSIVE</td></tr>
+          <tr class="best-row"><th scope="row">E001 · Random Forest</th><td><strong>0.8947</strong></td><td>1.0000</td><td>0.8095</td><td>0.9517</td><td>0 / 4</td><td>ROBUSTNESS 완료</td></tr>
+          <tr><th scope="row">E002 · LSTM-Autoencoder</th><td>0.8000</td><td>1.0000</td><td>0.6667</td><td>0.8239</td><td>0 / 7</td><td>INCONCLUSIVE</td></tr>
+        </tbody>
+      </table></div>
+      <p class="under-table">F1은 이상 class의 정밀도와 재현율을 함께 반영합니다. 기준 seed에서 E001은 정상 599개를 모두 정상으로 판단했지만 이상 21개 중 4개를 놓쳤습니다. 데이터 규모가 작아 숫자 하나의 영향이 크므로 5-seed 결과도 함께 봐야 합니다.</p>
+    </section>
+
+    <section id="perfect" class="section alt" aria-labelledby="perfect-title"><div class="container">
+      <div class="section-heading"><span class="section-no">05 / 사용자가 궁금한 F1 1.0</span><h2 id="perfect-title">F1 1.0은 “그 평가셋에서 완벽”이라는 뜻이지,<br><span class="soft">“미래에도 완벽”이라는 뜻이 아닙니다.</span></h2></div>
+      <div class="formula"><strong>F1 = 정밀도와 재현율의 조화평균</strong><p>F1 = 2 × (Precision × Recall) ÷ (Precision + Recall). F1이 1.0이 되려면 평가한 표본에서 오경보(FP)와 미탐(FN)이 모두 0이어야 합니다.</p></div>
+      <div class="score-compare">
+        <article class="score-card valid"><span class="score">1.0000</span><span class="label">E001의 3개 fold 중 한 fold</span><p>Random Forest가 특정 fold의 정상 200개와 이상 7개를 모두 맞혔습니다. 그러나 나머지 fold까지 합친 공식 OOF F1은 0.8947입니다. 작은 평가셋에서는 7개 이상을 모두 맞히는 한 번의 fold가 쉽게 1.0이 될 수 있습니다.</p></article>
+        <article class="score-card invalid"><span class="score">1.0000</span><span class="label">D000 가이드북 재현 · 비정식</span><p>100-sample sequence가 실제 timestamp gap을 넘고, 평가할 데이터의 정답을 사용해 threshold를 선택했습니다. 시험 답을 임계값 선택에 반영한 셈이라 점수가 낙관적으로 치우칩니다. 공식 모델 순위에 사용할 수 없습니다.</p></article>
+      </div>
+      <div class="answer-box"><span class="answer">따라서 두 1.0은 의미가 다릅니다.</span><p>E001의 한 fold 1.0은 올바른 검증 안에서 나온 부분 결과지만 전체 성능은 아닙니다. D000의 1.0은 검증 계약이 다른 진단값이며 누수 때문에 일반화 성능으로 해석할 수 없습니다. 모델 이름보다 데이터 분할과 threshold 선택 시점을 먼저 확인해야 합니다.</p></div>
+    </div></section>
+
+    <section id="future" class="section container" aria-labelledby="future-title">
+      <div class="section-heading"><span class="section-no">06 / 미래를 예측할 수 있는가</span><h2 id="future-title">현재 답은 “아직 증명하지 못했다”입니다.</h2><p>현재 모델은 이미 수집된 짧은 구간이 알려진 이상 상태와 닮았는지를 판정합니다. 실제 고장이 일어나기 전에 경고할 수 있는지는 별개의 질문입니다.</p></div>
+      <div class="evidence-list">
+        <article><span class="evidence-index">A</span><div><h3>고장 시작 시각이 없습니다.</h3><p>각 파일은 구간 전체의 정상/이상만 표시합니다. 모델이 고장 전에 반응했는지, 고장 후 상태를 알아본 것인지 구분할 기준점이 없습니다.</p></div></article>
+        <article><span class="evidence-index">B</span><div><h3>정상과 이상이 서로 다른 날짜입니다.</h3><p>정상은 2022-07-12, 이상은 2022-07-17에 수집됐습니다. timestamp는 feature에서 뺐지만, 날짜별 운전조건 변화가 센서 신호에 남아 있을 가능성은 현재 데이터만으로 제거할 수 없습니다.</p></div></article>
+        <article><span class="evidence-index">C</span><div><h3>완전히 새로운 미래 운전일 시험이 없습니다.</h3><p>segment 교차검증은 인접 행 누수를 막지만, 다른 날·다른 부하·다른 설비에서의 일반화까지 보장하지 않습니다. 별도 test나 prospective run이 필요합니다.</p></div></article>
+        <article><span class="evidence-index">D</span><div><h3>현재 입증한 것은 이상 구간 판정입니다.</h3><p>정확한 표현은 “과거 데이터의 독립 segment에서 이상 상태를 F1 0.8947로 판정했다”입니다. “고장을 미리 예측했다” 또는 “몇 초 전에 탐지했다”는 표현은 아직 사용할 수 없습니다.</p></div></article>
+      </div>
+      <div class="answer-box"><span class="answer">가능성을 시험할 모델은 만들었지만, 미래 예측력은 새 데이터로 검증해야 합니다.</span><p>고장 onset이 기록된 여러 날짜·부하·설비의 시간순 데이터에서 모델과 threshold를 고정한 채 먼저 예측하고, 그 뒤 정답을 열어 lead time·미탐·시간당 오경보를 측정해야 비로소 예지보전 성능을 말할 수 있습니다.</p></div>
+    </section>
+
+    <section id="next" class="section alt" aria-labelledby="next-title"><div class="container">
+      <div class="section-heading"><span class="section-no">07 / 다음 단계</span><h2 id="next-title">모델 추가보다 현장 검증 계약이 우선입니다.</h2></div>
+      <ol class="roadmap">
+        <li><span class="step">01</span><div><h3>E001 경보 정책 고정</h3><p>주의/경보 threshold, 연속 경보 횟수, cooldown, 센서 오류 분기와 작업자 점검 절차를 문서화합니다.</p></div><span class="step-state">최우선</span></li>
+        <li><span class="step">02</span><div><h3>미래 운전 데이터 확보</h3><p>여러 날짜·부하·가능하면 여러 설비에서 정상→이상→고장 흐름과 정확한 onset 시각을 수집합니다.</p></div><span class="step-state">필수</span></li>
+        <li><span class="step">03</span><div><h3>시간순 외부 검증</h3><p>모델과 threshold를 잠근 뒤 미래 구간에 적용해 lead time, 사건 단위 recall, 시간당 false alarm을 평가합니다.</p></div><span class="step-state">검증</span></li>
+        <li><span class="step">04</span><div><h3>약한 이상 보완 실험</h3><p>현재 FN이 집중된 저진동 이상을 대상으로 주파수·변화율 feature 또는 2단계 경보가 실제 recall을 높이는지 formal experiment로 확인합니다.</p></div><span class="step-state">후속</span></li>
+      </ol>
+      <div class="closing"><p><strong>현재의 가장 정직한 결론:</strong> Random Forest는 누수 방지 교차검증에서 가장 좋은 이상 구간 판정기입니다. 그러나 F1 1.0 진단은 미래 예측의 증거가 아니며, 실제 예지보전 주장은 onset이 있는 미래 운전 데이터 검증 이후에만 가능합니다.</p></div>
+    </div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><span>DATA STUDY / KAMP PREDICTIVE MAINTENANCE</span><span>Source: E000–E002 · D000 · 2026.09.28</span><a href="../" aria-label="Data Study 전체 대회로 돌아가기">전체 대회 보기 ↗</a></div></footer>
+</body>
+</html>
