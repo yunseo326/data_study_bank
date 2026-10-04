@@ -1,0 +1,1042 @@
+[
+  {
+    "project": "kisti_6",
+    "path": ".gitignore",
+    "remote_path": "kisti_6/.gitignore",
+    "source_sha256": "79bf1b9ae9fe58031741affe9ad13e5a3d7abfa208043cc36e7800136f7a483b",
+    "sha256": "79bf1b9ae9fe58031741affe9ad13e5a3d7abfa208043cc36e7800136f7a483b",
+    "git_blob": "40c2058dee47487c43abd550644d05f107913ce2",
+    "upload_size": 71,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "AGENTS.md",
+    "remote_path": "kisti_6/AGENTS.md",
+    "source_sha256": "5451bb8a153aacc199a31400ac5626891ff1e3fdb0713c1fdf40f78ec102ddb6",
+    "sha256": "5451bb8a153aacc199a31400ac5626891ff1e3fdb0713c1fdf40f78ec102ddb6",
+    "git_blob": "d14f91a8c0290d6dc2bec6c9675663a8cce03b7f",
+    "upload_size": 9445,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "CURRENT_STATE.md",
+    "remote_path": "kisti_6/CURRENT_STATE.md",
+    "source_sha256": "9a4e91771fc182af6b6e93e786e6938521f2d0d349a37906251d50ed00d46241",
+    "sha256": "9a4e91771fc182af6b6e93e786e6938521f2d0d349a37906251d50ed00d46241",
+    "git_blob": "5c1de3325185ab7fb7ca7b7e2f627b5cdfd2fa01",
+    "upload_size": 2074,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "IDEAS.md",
+    "remote_path": "kisti_6/IDEAS.md",
+    "source_sha256": "f8e62ed3a43c2dbcca069d87cc05d1b1605ac22dc14b4738c5b423146c0979a3",
+    "sha256": "f8e62ed3a43c2dbcca069d87cc05d1b1605ac22dc14b4738c5b423146c0979a3",
+    "git_blob": "7836bbb4eac834e805e4c5bc50aba35c50fe05af",
+    "upload_size": 887,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "README.md",
+    "remote_path": "kisti_6/README.md",
+    "source_sha256": "a78bf0e6352f8a18974220584561307c049d34b44c95ed209c13cfc386c99c33",
+    "sha256": "a78bf0e6352f8a18974220584561307c049d34b44c95ed209c13cfc386c99c33",
+    "git_blob": "0e4361c48c20422ab51bd1ed50721063a8dbe029",
+    "upload_size": 7668,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "progress.md",
+    "remote_path": "kisti_6/progress.md",
+    "source_sha256": "b44b06f232945e030427052bd280e8c1c5d5c957c558336a9c6a24659478fd62",
+    "sha256": "b44b06f232945e030427052bd280e8c1c5d5c957c558336a9c6a24659478fd62",
+    "git_blob": "924741388191e2b22f270c7ebf9c9aec72a96d43",
+    "upload_size": 4119,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "requirements.txt",
+    "remote_path": "kisti_6/requirements.txt",
+    "source_sha256": "82b70a4421155e93ec606551f8b80287804cfcc0908a4296b24a1ce7d308bd9f",
+    "sha256": "82b70a4421155e93ec606551f8b80287804cfcc0908a4296b24a1ce7d308bd9f",
+    "git_blob": "7dc7144f9a3e9dc8e34d4abbe2aff2c690dd49d0",
+    "upload_size": 54,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reviewer_rule.md",
+    "remote_path": "kisti_6/reviewer_rule.md",
+    "source_sha256": "c46ac9cd4b650f31fa55aeaf1f753936649a0cc6ed5bcd9a177ad048431e827b",
+    "sha256": "c46ac9cd4b650f31fa55aeaf1f753936649a0cc6ed5bcd9a177ad048431e827b",
+    "git_blob": "31c5cc4f0d78cbe2466de29b5f9c0e6db1cb5011",
+    "upload_size": 1572,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "configs/baseline.json",
+    "remote_path": "kisti_6/configs/baseline.json",
+    "source_sha256": "75692a8dd7ccc088c209333a1eb15a2a79d21de98353b5cef679f5b4d7f426d1",
+    "sha256": "75692a8dd7ccc088c209333a1eb15a2a79d21de98353b5cef679f5b4d7f426d1",
+    "git_blob": "8db293381dbb485659257cacb7b5ef9a4fcacf6c",
+    "upload_size": 531,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "data/AI_DATA_ASSISTANT_IDEAS.md",
+    "remote_path": "kisti_6/data/AI_DATA_ASSISTANT_IDEAS.md",
+    "source_sha256": "0b8438f339b68ea78420d89b54aae96be9a273431fb5f57352d61377d507f316",
+    "sha256": "0b8438f339b68ea78420d89b54aae96be9a273431fb5f57352d61377d507f316",
+    "git_blob": "b4c2479dd3a49ed61db9641f0f18106d523a72a4",
+    "upload_size": 1591,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "experiments/README.md",
+    "remote_path": "kisti_6/experiments/README.md",
+    "source_sha256": "dc4c1ee1826b32624d8e72df14e88e6c5a191e8fbaaeaf19f824d31c043f0a60",
+    "sha256": "dc4c1ee1826b32624d8e72df14e88e6c5a191e8fbaaeaf19f824d31c043f0a60",
+    "git_blob": "0a27e68b58be64aa7d536a2dbdba879e0e252e67",
+    "upload_size": 3544,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "experiments/registry.csv",
+    "remote_path": "kisti_6/experiments/registry.csv",
+    "source_sha256": "ba32bcd2366d768b366f07d60fb9eb758e9fd5a2dc8b2e07aa2990429d6b4e64",
+    "sha256": "ba32bcd2366d768b366f07d60fb9eb758e9fd5a2dc8b2e07aa2990429d6b4e64",
+    "git_blob": "e8b9c8b7adefa3ae134102cb373f0fbad4b2422d",
+    "upload_size": 172,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "notebooks/README.md",
+    "remote_path": "kisti_6/notebooks/README.md",
+    "source_sha256": "df57e10a3c7efef5dcf4cf0f886eb96673272bc34258626d6523fc3873281c07",
+    "sha256": "df57e10a3c7efef5dcf4cf0f886eb96673272bc34258626d6523fc3873281c07",
+    "git_blob": "67c4b93189544ac8b1a19a23647992d607209fcc",
+    "upload_size": 1269,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "references/README.md",
+    "remote_path": "kisti_6/references/README.md",
+    "source_sha256": "1be3043a9dc049a555ff6a990166ddf92785c14e05f914715e4260fbfa5a66ad",
+    "sha256": "1be3043a9dc049a555ff6a990166ddf92785c14e05f914715e4260fbfa5a66ad",
+    "git_blob": "331e9bf5f6ccbd1b456a6955e75181d13563419b",
+    "upload_size": 675,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "references/competitions/2026_river_level/AI_PLANNING_REFERENCE.md",
+    "remote_path": "kisti_6/references/competitions/2026_river_level/AI_PLANNING_REFERENCE.md",
+    "source_sha256": "f0bfec6b6408c68456915046335d6cf970f9682b50821ea1d14e1d669001a991",
+    "sha256": "f0bfec6b6408c68456915046335d6cf970f9682b50821ea1d14e1d669001a991",
+    "git_blob": "67e95c22b5b4ebf1dccb30acbcd30ce83cb0bfc8",
+    "upload_size": 15239,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "references/competitions/2026_river_level/sources/2026_참가신청서.hwp",
+    "remote_path": "kisti_6/references/competitions/2026_river_level/sources/2026_참가신청서.hwp",
+    "source_sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "git_blob": "a0514074cf0b8608b8b022230f999d588e9bdf1e",
+    "upload_size": 133120,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "references/competitions/2026_river_level/sources/official_problem_snapshot_2026-09-23.md",
+    "remote_path": "kisti_6/references/competitions/2026_river_level/sources/official_problem_snapshot_2026-09-23.md",
+    "source_sha256": "54722805454f32cbb1286cefd8faf5e580e7d5b4051cdf26613f8ed79c831954",
+    "sha256": "54722805454f32cbb1286cefd8faf5e580e7d5b4051cdf26613f8ed79c831954",
+    "git_blob": "6108096b39e5bc8206bf6dbe1e19f7f640c3c23b",
+    "upload_size": 17941,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "references/competitions/2026_river_level/sources/preliminary_sample_296rows.csv",
+    "remote_path": "kisti_6/references/competitions/2026_river_level/sources/preliminary_sample_296rows.csv",
+    "source_sha256": "7ad149d710ad99e1448b305a1fed05756e6218ab9218fb1cda1155a159527b43",
+    "sha256": "7ad149d710ad99e1448b305a1fed05756e6218ab9218fb1cda1155a159527b43",
+    "git_blob": "838981b145d925bb077297fc1d29a94683f18e6b",
+    "upload_size": 48786,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reports/2026_하천수위_참가신청서_초안.docx",
+    "remote_path": "kisti_6/reports/2026_하천수위_참가신청서_초안.docx",
+    "source_sha256": "280f231b63944e9565561ce58188ee5d6c26358ba03a76635c6fbbe080ae3357",
+    "sha256": "280f231b63944e9565561ce58188ee5d6c26358ba03a76635c6fbbe080ae3357",
+    "git_blob": "983b26cea9a51a7ceb465a1a5709c9c43ef5865a",
+    "upload_size": 45861,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reports/EXPERIMENTS.md",
+    "remote_path": "kisti_6/reports/EXPERIMENTS.md",
+    "source_sha256": "233ab417e92475beba0762452e5c8e5b6ba836bd5651ae1e75690c9d18068ae4",
+    "sha256": "233ab417e92475beba0762452e5c8e5b6ba836bd5651ae1e75690c9d18068ae4",
+    "git_blob": "289386dd577e46e22c7616138c099fa576a9ec98",
+    "upload_size": 163,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reports/README.md",
+    "remote_path": "kisti_6/reports/README.md",
+    "source_sha256": "d6d2a99f34dcf80fe4a1212f9812c69312b3d9d0572cd23a8d5eb6abe8590318",
+    "sha256": "d6d2a99f34dcf80fe4a1212f9812c69312b3d9d0572cd23a8d5eb6abe8590318",
+    "git_blob": "9363ca54796b8fccf89a7da7277914f432055f68",
+    "upload_size": 2637,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reports/SYSTEM_CHANGES.md",
+    "remote_path": "kisti_6/reports/SYSTEM_CHANGES.md",
+    "source_sha256": "765f589288963765e5aa192d2fd053166c5f5b64310f8759bacd6a5d155b53a9",
+    "sha256": "765f589288963765e5aa192d2fd053166c5f5b64310f8759bacd6a5d155b53a9",
+    "git_blob": "787f1acc5c8675c78e644253da228d03cce55fa6",
+    "upload_size": 12356,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "reports/styles.css",
+    "remote_path": "kisti_6/reports/styles.css",
+    "source_sha256": "fd962d95f5a9626e98eabd546da5ce3dbc6160524ecd8ef6cfd84567710ad412",
+    "sha256": "fd962d95f5a9626e98eabd546da5ce3dbc6160524ecd8ef6cfd84567710ad412",
+    "git_blob": "e6d30e90845fe77d5a9212653b52535e930b7bf5",
+    "upload_size": 8944,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/README.md",
+    "remote_path": "kisti_6/src/README.md",
+    "source_sha256": "a75fd8c6a0d6a0660035df892655b43b0f49c6fdc57b9cc584c83106e3a84798",
+    "sha256": "a75fd8c6a0d6a0660035df892655b43b0f49c6fdc57b9cc584c83106e3a84798",
+    "git_blob": "3524922aa6cf7d6ecf1acad694423c5bfadfbfe1",
+    "upload_size": 2752,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/__init__.py",
+    "remote_path": "kisti_6/src/__init__.py",
+    "source_sha256": "8de3d523465eaf60712c162c61effae549fb783dd9aaaf5c475a7cfb4fdc69a2",
+    "sha256": "8de3d523465eaf60712c162c61effae549fb783dd9aaaf5c475a7cfb4fdc69a2",
+    "git_blob": "257a02c676a7f30edae8fb34a413a5e044839c67",
+    "upload_size": 62,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/artifacts.py",
+    "remote_path": "kisti_6/src/artifacts.py",
+    "source_sha256": "47f7a20b93c4e5589bc2551fb9ce8a39e244ac0d9df3b79582b188f037cef8b6",
+    "sha256": "47f7a20b93c4e5589bc2551fb9ce8a39e244ac0d9df3b79582b188f037cef8b6",
+    "git_blob": "300c5acf9f51e4fb59f4e6d655cb1699c3e21cd1",
+    "upload_size": 596,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/config.py",
+    "remote_path": "kisti_6/src/config.py",
+    "source_sha256": "51945ca5dc60f1ee764938875faf9b4197bcc6bbb5eaccb5cd8912d97227ec7a",
+    "sha256": "51945ca5dc60f1ee764938875faf9b4197bcc6bbb5eaccb5cd8912d97227ec7a",
+    "git_blob": "62eccb9bf7402fa2ff1f78f21301c38d0814f90b",
+    "upload_size": 1898,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/data.py",
+    "remote_path": "kisti_6/src/data.py",
+    "source_sha256": "9cb56a14011433616d35a3a5a6bd2ab24be277c7cc3c274aece80b5fd284e2a9",
+    "sha256": "9cb56a14011433616d35a3a5a6bd2ab24be277c7cc3c274aece80b5fd284e2a9",
+    "git_blob": "2246c4817e29c5248bde93f74e5dacc4dc527103",
+    "upload_size": 2309,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/metrics.py",
+    "remote_path": "kisti_6/src/metrics.py",
+    "source_sha256": "783d5aabd1e8e874c1e93a2f0dbc27285df26cbb75e5398a6bd49f5ced6c27f1",
+    "sha256": "783d5aabd1e8e874c1e93a2f0dbc27285df26cbb75e5398a6bd49f5ced6c27f1",
+    "git_blob": "e1d2adcc04f8cffbd60db0154d8dbac9c99ed7a2",
+    "upload_size": 1500,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/run_experiment.py",
+    "remote_path": "kisti_6/src/run_experiment.py",
+    "source_sha256": "1e077ea6be0f971bde9cbf05029fae13827122be45f3febd21c08d0d388ac6f8",
+    "sha256": "1e077ea6be0f971bde9cbf05029fae13827122be45f3febd21c08d0d388ac6f8",
+    "git_blob": "cec0ab72eaae0d0339572b29736d20513ed322df",
+    "upload_size": 9771,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/run_pipeline.py",
+    "remote_path": "kisti_6/src/run_pipeline.py",
+    "source_sha256": "a6ac61f03043b5a50faf5abc8ca39f5b0121e4245b0f602a8da2c7e6be270795",
+    "sha256": "a6ac61f03043b5a50faf5abc8ca39f5b0121e4245b0f602a8da2c7e6be270795",
+    "git_blob": "ded9c3342e56d3e55e62f305e1b52fdcf40e7021",
+    "upload_size": 953,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/train.py",
+    "remote_path": "kisti_6/src/train.py",
+    "source_sha256": "5c8651d740ec8178e75489c1f616c62b351531f78600cae11e05c5c931141eb8",
+    "sha256": "5c8651d740ec8178e75489c1f616c62b351531f78600cae11e05c5c931141eb8",
+    "git_blob": "b4bc37d1ac07916826b8119b8df66920c10783b8",
+    "upload_size": 725,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/validation.py",
+    "remote_path": "kisti_6/src/validation.py",
+    "source_sha256": "831148820463971daf5bcc6091ef3f5680c30fbc977665a4ab145152d1e86857",
+    "sha256": "831148820463971daf5bcc6091ef3f5680c30fbc977665a4ab145152d1e86857",
+    "git_blob": "c99c45f7398ec19c9d4ca7293f7cfeaa7d38d42b",
+    "upload_size": 3217,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/EDA/__init__.py",
+    "remote_path": "kisti_6/src/EDA/__init__.py",
+    "source_sha256": "a0dd00c2cfea7151d7f509faa3a25e3ebde1811c8745415b3dd8c7e491edc9a8",
+    "sha256": "a0dd00c2cfea7151d7f509faa3a25e3ebde1811c8745415b3dd8c7e491edc9a8",
+    "git_blob": "148687af963b21dd3f10c2e4ec75afbcc565db44",
+    "upload_size": 48,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/EDA/analyze_atoms.py",
+    "remote_path": "kisti_6/src/EDA/analyze_atoms.py",
+    "source_sha256": "03378f6c93d455d34767e3238a739a3888ecf3d921009266197c20f7208c7f29",
+    "sha256": "03378f6c93d455d34767e3238a739a3888ecf3d921009266197c20f7208c7f29",
+    "git_blob": "a3082ed368937ab38aae6611a7da051ec730a065",
+    "upload_size": 13978,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/EDA/run_eda.py",
+    "remote_path": "kisti_6/src/EDA/run_eda.py",
+    "source_sha256": "a4eab6dce4c9e78191aee5fe9b1b6fdb93c816db5d8c29ff94e6c1db0ef878d9",
+    "sha256": "a4eab6dce4c9e78191aee5fe9b1b6fdb93c816db5d8c29ff94e6c1db0ef878d9",
+    "git_blob": "7cddf7890aa76ffe7739c2d3eb95027c301b3835",
+    "upload_size": 8279,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/EDA/visuals.py",
+    "remote_path": "kisti_6/src/EDA/visuals.py",
+    "source_sha256": "c4a9458127e2bbfed4819ebed4409c00e6c867f6770786f565193fd60d121607",
+    "sha256": "c4a9458127e2bbfed4819ebed4409c00e6c867f6770786f565193fd60d121607",
+    "git_blob": "16562da86b0d114a68cf40566e210daf1f5732f0",
+    "upload_size": 8446,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/features/__init__.py",
+    "remote_path": "kisti_6/src/features/__init__.py",
+    "source_sha256": "058777336de49d87efd9c7fb62715929c6ca3ae9a106e1f50e5bf088f76f2f25",
+    "sha256": "058777336de49d87efd9c7fb62715929c6ca3ae9a106e1f50e5bf088f76f2f25",
+    "git_blob": "33b591930fa2894971305e68a218d6c7f001a3c5",
+    "upload_size": 160,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/features/build_features.py",
+    "remote_path": "kisti_6/src/features/build_features.py",
+    "source_sha256": "d99311c633ce65f8541f3a98c5c836229e450ce6bb0fba06e9ae320d0569ac82",
+    "sha256": "d99311c633ce65f8541f3a98c5c836229e450ce6bb0fba06e9ae320d0569ac82",
+    "git_blob": "ea9cfb46415b24ce0a8cb8a40bafa193a354373a",
+    "upload_size": 2020,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/models/__init__.py",
+    "remote_path": "kisti_6/src/models/__init__.py",
+    "source_sha256": "0394168ab64f060584a8a3edee666993997fb5d043a2d8588a2b0e5a98e2735c",
+    "sha256": "0394168ab64f060584a8a3edee666993997fb5d043a2d8588a2b0e5a98e2735c",
+    "git_blob": "847d7e25a230fd2fdf053d54bd219f25d00947f3",
+    "upload_size": 80,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/models/baseline.py",
+    "remote_path": "kisti_6/src/models/baseline.py",
+    "source_sha256": "186715723a507040a03a65fb3326b39e04a5382cb7e9288fb1b8acd46c045425",
+    "sha256": "186715723a507040a03a65fb3326b39e04a5382cb7e9288fb1b8acd46c045425",
+    "git_blob": "5ee0e7031df224a834ff4469083fa06192b37245",
+    "upload_size": 866,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/__init__.py",
+    "remote_path": "kisti_6/src/tests/__init__.py",
+    "source_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "git_blob": "8b137891791fe96927ad78e64b0aad7bded08bdc",
+    "upload_size": 1,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_artifacts.py",
+    "remote_path": "kisti_6/src/tests/test_artifacts.py",
+    "source_sha256": "0e8cac5d78e4f7425419967d00b5a6a280c19d000aeabca0b886a350c86120ab",
+    "sha256": "0e8cac5d78e4f7425419967d00b5a6a280c19d000aeabca0b886a350c86120ab",
+    "git_blob": "213b171f7f65191d726bd885a7e6bbabb5f767d0",
+    "upload_size": 886,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_eda.py",
+    "remote_path": "kisti_6/src/tests/test_eda.py",
+    "source_sha256": "3c79f9d8c36b28602e05d14510e0ae0b569b49fd8d028567a56167817c92ad8a",
+    "sha256": "3c79f9d8c36b28602e05d14510e0ae0b569b49fd8d028567a56167817c92ad8a",
+    "git_blob": "d3b754fc083b9212d6052643ddf76c788c2785be",
+    "upload_size": 2599,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_experiment_layout.py",
+    "remote_path": "kisti_6/src/tests/test_experiment_layout.py",
+    "source_sha256": "17fbc788616921588c37bf87307934d2f00e864d4437e14bcf62c3d4cdfbb949",
+    "sha256": "17fbc788616921588c37bf87307934d2f00e864d4437e14bcf62c3d4cdfbb949",
+    "git_blob": "c1de2f200ed01275a562100acb4d14ae85a0ac62",
+    "upload_size": 2733,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_features.py",
+    "remote_path": "kisti_6/src/tests/test_features.py",
+    "source_sha256": "4f34f7e70995496bb782c805a1ed9b93755b244ef8d49e95ce7f9591a244f186",
+    "sha256": "4f34f7e70995496bb782c805a1ed9b93755b244ef8d49e95ce7f9591a244f186",
+    "git_blob": "4bf3da06f7d02f300a7245d4fe8db5579fcdd576",
+    "upload_size": 670,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_metrics.py",
+    "remote_path": "kisti_6/src/tests/test_metrics.py",
+    "source_sha256": "e7821ed65317edbef09373adb6940a793f38ad3a0fa41f4eb29e80d05c664b8c",
+    "sha256": "e7821ed65317edbef09373adb6940a793f38ad3a0fa41f4eb29e80d05c664b8c",
+    "git_blob": "5ba00d06e7ae7513689edd3c5b73f8e581820d17",
+    "upload_size": 551,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_6",
+    "path": "src/tests/test_smoke_pipeline.py",
+    "remote_path": "kisti_6/src/tests/test_smoke_pipeline.py",
+    "source_sha256": "3a4086ccb3a38285b83bfeacace07b310a1a8668f0ecb8e2824cf4b30d5bf604",
+    "sha256": "3a4086ccb3a38285b83bfeacace07b310a1a8668f0ecb8e2824cf4b30d5bf604",
+    "git_blob": "32ee780f43e51225fcc06726907d8eff39150a48",
+    "upload_size": 1197,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": ".gitignore",
+    "remote_path": "kisti_nokgo/.gitignore",
+    "source_sha256": "79bf1b9ae9fe58031741affe9ad13e5a3d7abfa208043cc36e7800136f7a483b",
+    "sha256": "79bf1b9ae9fe58031741affe9ad13e5a3d7abfa208043cc36e7800136f7a483b",
+    "git_blob": "40c2058dee47487c43abd550644d05f107913ce2",
+    "upload_size": 71,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "AGENTS.md",
+    "remote_path": "kisti_nokgo/AGENTS.md",
+    "source_sha256": "8f0419763a602fb2c9589e067eb304a9fd50cd521bf0f9ecdb90058cf7a190ca",
+    "sha256": "8f0419763a602fb2c9589e067eb304a9fd50cd521bf0f9ecdb90058cf7a190ca",
+    "git_blob": "0645ab13cfb24347f13c2f8d05901a36e2227da2",
+    "upload_size": 8357,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "CURRENT_STATE.md",
+    "remote_path": "kisti_nokgo/CURRENT_STATE.md",
+    "source_sha256": "9bede12230309281aeb6abe8549cd170a85bda980de93f4b52310259c3727545",
+    "sha256": "9bede12230309281aeb6abe8549cd170a85bda980de93f4b52310259c3727545",
+    "git_blob": "56d11b08ccfa7ebf7124f61a4b5e7cab042e642f",
+    "upload_size": 1721,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "IDEAS.md",
+    "remote_path": "kisti_nokgo/IDEAS.md",
+    "source_sha256": "f8e62ed3a43c2dbcca069d87cc05d1b1605ac22dc14b4738c5b423146c0979a3",
+    "sha256": "f8e62ed3a43c2dbcca069d87cc05d1b1605ac22dc14b4738c5b423146c0979a3",
+    "git_blob": "7836bbb4eac834e805e4c5bc50aba35c50fe05af",
+    "upload_size": 887,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "README.md",
+    "remote_path": "kisti_nokgo/README.md",
+    "source_sha256": "0b6a00da2dcfd7d790c00084f47b5384b6e900e0ad6373e865f88928092be25e",
+    "sha256": "0b6a00da2dcfd7d790c00084f47b5384b6e900e0ad6373e865f88928092be25e",
+    "git_blob": "e3e983032e396fda5f5b720886997c0e9c32bbd4",
+    "upload_size": 8248,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "progress.md",
+    "remote_path": "kisti_nokgo/progress.md",
+    "source_sha256": "3d3267235f2a3e751e326ad6426887e37b07afab7b0b81f4e14d236798fad9da",
+    "sha256": "3d3267235f2a3e751e326ad6426887e37b07afab7b0b81f4e14d236798fad9da",
+    "git_blob": "29bb17130d9165b4e66bf26202e70c69c6cafc2f",
+    "upload_size": 3676,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "requirements.txt",
+    "remote_path": "kisti_nokgo/requirements.txt",
+    "source_sha256": "82b70a4421155e93ec606551f8b80287804cfcc0908a4296b24a1ce7d308bd9f",
+    "sha256": "82b70a4421155e93ec606551f8b80287804cfcc0908a4296b24a1ce7d308bd9f",
+    "git_blob": "7dc7144f9a3e9dc8e34d4abbe2aff2c690dd49d0",
+    "upload_size": 54,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "reviewer_rule.md",
+    "remote_path": "kisti_nokgo/reviewer_rule.md",
+    "source_sha256": "c46ac9cd4b650f31fa55aeaf1f753936649a0cc6ed5bcd9a177ad048431e827b",
+    "sha256": "c46ac9cd4b650f31fa55aeaf1f753936649a0cc6ed5bcd9a177ad048431e827b",
+    "git_blob": "31c5cc4f0d78cbe2466de29b5f9c0e6db1cb5011",
+    "upload_size": 1572,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "configs/baseline.json",
+    "remote_path": "kisti_nokgo/configs/baseline.json",
+    "source_sha256": "75692a8dd7ccc088c209333a1eb15a2a79d21de98353b5cef679f5b4d7f426d1",
+    "sha256": "75692a8dd7ccc088c209333a1eb15a2a79d21de98353b5cef679f5b4d7f426d1",
+    "git_blob": "8db293381dbb485659257cacb7b5ef9a4fcacf6c",
+    "upload_size": 531,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "data/AI_DATA_ASSISTANT_IDEAS.md",
+    "remote_path": "kisti_nokgo/data/AI_DATA_ASSISTANT_IDEAS.md",
+    "source_sha256": "0b8438f339b68ea78420d89b54aae96be9a273431fb5f57352d61377d507f316",
+    "sha256": "0b8438f339b68ea78420d89b54aae96be9a273431fb5f57352d61377d507f316",
+    "git_blob": "b4c2479dd3a49ed61db9641f0f18106d523a72a4",
+    "upload_size": 1591,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "experiments/README.md",
+    "remote_path": "kisti_nokgo/experiments/README.md",
+    "source_sha256": "dc4c1ee1826b32624d8e72df14e88e6c5a191e8fbaaeaf19f824d31c043f0a60",
+    "sha256": "dc4c1ee1826b32624d8e72df14e88e6c5a191e8fbaaeaf19f824d31c043f0a60",
+    "git_blob": "0a27e68b58be64aa7d536a2dbdba879e0e252e67",
+    "upload_size": 3544,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "experiments/registry.csv",
+    "remote_path": "kisti_nokgo/experiments/registry.csv",
+    "source_sha256": "ba32bcd2366d768b366f07d60fb9eb758e9fd5a2dc8b2e07aa2990429d6b4e64",
+    "sha256": "ba32bcd2366d768b366f07d60fb9eb758e9fd5a2dc8b2e07aa2990429d6b4e64",
+    "git_blob": "e8b9c8b7adefa3ae134102cb373f0fbad4b2422d",
+    "upload_size": 172,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "notebooks/README.md",
+    "remote_path": "kisti_nokgo/notebooks/README.md",
+    "source_sha256": "df57e10a3c7efef5dcf4cf0f886eb96673272bc34258626d6523fc3873281c07",
+    "sha256": "df57e10a3c7efef5dcf4cf0f886eb96673272bc34258626d6523fc3873281c07",
+    "git_blob": "67c4b93189544ac8b1a19a23647992d607209fcc",
+    "upload_size": 1269,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/2026_DATA_AI_분석_경진대회_참가신청서_초안.docx",
+    "remote_path": "kisti_nokgo/outputs/competition_application/2026_DATA_AI_분석_경진대회_참가신청서_초안.docx",
+    "source_sha256": "fbd668c62f6e86324da3b25d753f2d0df0d49835de69273eb501f71946540c45",
+    "sha256": "fbd668c62f6e86324da3b25d753f2d0df0d49835de69273eb501f71946540c45",
+    "git_blob": "f539bb257fe31f2681fa9336555661ff6768e21d",
+    "upload_size": 41814,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/2026_DATA_AI_분석_경진대회_참가신청서_초안.pdf",
+    "remote_path": "kisti_nokgo/outputs/competition_application/2026_DATA_AI_분석_경진대회_참가신청서_초안.pdf",
+    "source_sha256": "98a701338d2768e9fad8ae61ccd834b3be884004dd58a35ae630004b2d4c9e1d",
+    "sha256": "98a701338d2768e9fad8ae61ccd834b3be884004dd58a35ae630004b2d4c9e1d",
+    "git_blob": "c7f1155dd0bc0218ffe33fe7fd2ba693d3f6c4cd",
+    "upload_size": 248391,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/render_check.pdf",
+    "remote_path": "kisti_nokgo/outputs/competition_application/render_check.pdf",
+    "source_sha256": "83e1a579275a52250a8aa05070368c8b4a2db0d5afd07fee9896ab9b33901a27",
+    "sha256": "83e1a579275a52250a8aa05070368c8b4a2db0d5afd07fee9896ab9b33901a27",
+    "git_blob": "a1cab4131b4b588b1bec5ca2f7685f0513571b60",
+    "upload_size": 248491,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/template.hwp",
+    "remote_path": "kisti_nokgo/outputs/competition_application/template.hwp",
+    "source_sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "git_blob": "a0514074cf0b8608b8b022230f999d588e9bdf1e",
+    "upload_size": 133120,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/rendered/page-1.png",
+    "remote_path": "kisti_nokgo/outputs/competition_application/rendered/page-1.png",
+    "source_sha256": "f4bbeb2fc1900e4d4866f73257336619c100d4032a0b8faa12aaaa1330b97dbe",
+    "sha256": "f4bbeb2fc1900e4d4866f73257336619c100d4032a0b8faa12aaaa1330b97dbe",
+    "git_blob": "e932b2836a95309cdef94a398b6b0be6b6af4c6e",
+    "upload_size": 238112,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/rendered/page-2.png",
+    "remote_path": "kisti_nokgo/outputs/competition_application/rendered/page-2.png",
+    "source_sha256": "6ac9b8cafcea6cd894f50fdd98733dd0bd05c7544980f50dc4efceb9613f215d",
+    "sha256": "6ac9b8cafcea6cd894f50fdd98733dd0bd05c7544980f50dc4efceb9613f215d",
+    "git_blob": "635785f5e05fa5a8a5200cb42ae98479fa262a13",
+    "upload_size": 318964,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "outputs/competition_application/rendered/page-3.png",
+    "remote_path": "kisti_nokgo/outputs/competition_application/rendered/page-3.png",
+    "source_sha256": "f60645509ba8eae06a5bf0141c0fc4bd896705f3c244ca7952f37d8eec8d2618",
+    "sha256": "f60645509ba8eae06a5bf0141c0fc4bd896705f3c244ca7952f37d8eec8d2618",
+    "git_blob": "b702fa2af2d4a95c9e4010a4b94dc06cf21dfa1f",
+    "upload_size": 245240,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/README.md",
+    "remote_path": "kisti_nokgo/references/README.md",
+    "source_sha256": "3dc2ae1d3e4e7437c4157b3d2c238ce72f8eb59c599f9785ee0475ea36d9e85f",
+    "sha256": "3dc2ae1d3e4e7437c4157b3d2c238ce72f8eb59c599f9785ee0475ea36d9e85f",
+    "git_blob": "fd9c531c5953a703c59492628b7922d747d64714",
+    "upload_size": 1093,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/AI_COMPETITION_BRIEF.md",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/AI_COMPETITION_BRIEF.md",
+    "source_sha256": "651b71730c1ffcced4d938a07afe4093d5249901246c55fe84b3023c423ed20c",
+    "sha256": "651b71730c1ffcced4d938a07afe4093d5249901246c55fe84b3023c423ed20c",
+    "git_blob": "091c331de47f55cf037e343d3d036af515fe3753",
+    "upload_size": 15059,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/sources/2026_참가신청서.hwp",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/2026_참가신청서.hwp",
+    "source_sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "sha256": "3d85f7ac144266b67145cf69442542d9f57cfcc487340bfe558f6c21f3d03395",
+    "git_blob": "a0514074cf0b8608b8b022230f999d588e9bdf1e",
+    "upload_size": 133120,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/sources/녹조.md",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/녹조.md",
+    "source_sha256": "0965a03bfd2d2688dd8eeca53f46ce086507f8fb3a1411e57715e8083072b954",
+    "sha256": "0965a03bfd2d2688dd8eeca53f46ce086507f8fb3a1411e57715e8083072b954",
+    "git_blob": "080633b21396834de08f908470a43afa50b6c07b",
+    "upload_size": 8913,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/sources/녹조.xlsx",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/녹조.xlsx",
+    "source_sha256": "7bb9fc52f28c46259d58079ca11ea11d7fc379150500b1d59a89972b48383a02",
+    "sha256": "7bb9fc52f28c46259d58079ca11ea11d7fc379150500b1d59a89972b48383a02",
+    "git_blob": "6ac7322eb2cd6b0df07106a423a4e69d8be4b1f9",
+    "upload_size": 45904,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/sources/다운로드 (1).png",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/다운로드 (1).png",
+    "source_sha256": "3a46269ee519f2beb732444eaab3963f84edeb81d90a934d460e986a06f7d50e",
+    "sha256": "3a46269ee519f2beb732444eaab3963f84edeb81d90a934d460e986a06f7d50e",
+    "git_blob": "2fc2326cd39b7a4869e90a1c832dda884e04a622",
+    "upload_size": 5655,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "references/competitions/2026_aida_algal_bloom/sources/다운로드.png",
+    "remote_path": "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/다운로드.png",
+    "source_sha256": "5113db6a01a01588fe4d638820a4bfca3a02e9cde998aedb42661dd6b67bf7e4",
+    "sha256": "5113db6a01a01588fe4d638820a4bfca3a02e9cde998aedb42661dd6b67bf7e4",
+    "git_blob": "2dd043a065242e942d7292466f1a1b3df888b0fd",
+    "upload_size": 12658,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "reports/EXPERIMENTS.md",
+    "remote_path": "kisti_nokgo/reports/EXPERIMENTS.md",
+    "source_sha256": "233ab417e92475beba0762452e5c8e5b6ba836bd5651ae1e75690c9d18068ae4",
+    "sha256": "233ab417e92475beba0762452e5c8e5b6ba836bd5651ae1e75690c9d18068ae4",
+    "git_blob": "289386dd577e46e22c7616138c099fa576a9ec98",
+    "upload_size": 163,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "reports/README.md",
+    "remote_path": "kisti_nokgo/reports/README.md",
+    "source_sha256": "d6d2a99f34dcf80fe4a1212f9812c69312b3d9d0572cd23a8d5eb6abe8590318",
+    "sha256": "d6d2a99f34dcf80fe4a1212f9812c69312b3d9d0572cd23a8d5eb6abe8590318",
+    "git_blob": "9363ca54796b8fccf89a7da7277914f432055f68",
+    "upload_size": 2637,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "reports/SYSTEM_CHANGES.md",
+    "remote_path": "kisti_nokgo/reports/SYSTEM_CHANGES.md",
+    "source_sha256": "1f6a0643ffd3f0b09b8649d8737ab3031c0dcc66a85e2d361a76e129ec9d1ce5",
+    "sha256": "1f6a0643ffd3f0b09b8649d8737ab3031c0dcc66a85e2d361a76e129ec9d1ce5",
+    "git_blob": "ef2c6e50111a9f4b4256ba8180088fcc914f5755",
+    "upload_size": 11724,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "reports/styles.css",
+    "remote_path": "kisti_nokgo/reports/styles.css",
+    "source_sha256": "fd962d95f5a9626e98eabd546da5ce3dbc6160524ecd8ef6cfd84567710ad412",
+    "sha256": "fd962d95f5a9626e98eabd546da5ce3dbc6160524ecd8ef6cfd84567710ad412",
+    "git_blob": "e6d30e90845fe77d5a9212653b52535e930b7bf5",
+    "upload_size": 8944,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/README.md",
+    "remote_path": "kisti_nokgo/src/README.md",
+    "source_sha256": "a75fd8c6a0d6a0660035df892655b43b0f49c6fdc57b9cc584c83106e3a84798",
+    "sha256": "a75fd8c6a0d6a0660035df892655b43b0f49c6fdc57b9cc584c83106e3a84798",
+    "git_blob": "3524922aa6cf7d6ecf1acad694423c5bfadfbfe1",
+    "upload_size": 2752,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/__init__.py",
+    "remote_path": "kisti_nokgo/src/__init__.py",
+    "source_sha256": "8de3d523465eaf60712c162c61effae549fb783dd9aaaf5c475a7cfb4fdc69a2",
+    "sha256": "8de3d523465eaf60712c162c61effae549fb783dd9aaaf5c475a7cfb4fdc69a2",
+    "git_blob": "257a02c676a7f30edae8fb34a413a5e044839c67",
+    "upload_size": 62,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/artifacts.py",
+    "remote_path": "kisti_nokgo/src/artifacts.py",
+    "source_sha256": "47f7a20b93c4e5589bc2551fb9ce8a39e244ac0d9df3b79582b188f037cef8b6",
+    "sha256": "47f7a20b93c4e5589bc2551fb9ce8a39e244ac0d9df3b79582b188f037cef8b6",
+    "git_blob": "300c5acf9f51e4fb59f4e6d655cb1699c3e21cd1",
+    "upload_size": 596,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/config.py",
+    "remote_path": "kisti_nokgo/src/config.py",
+    "source_sha256": "51945ca5dc60f1ee764938875faf9b4197bcc6bbb5eaccb5cd8912d97227ec7a",
+    "sha256": "51945ca5dc60f1ee764938875faf9b4197bcc6bbb5eaccb5cd8912d97227ec7a",
+    "git_blob": "62eccb9bf7402fa2ff1f78f21301c38d0814f90b",
+    "upload_size": 1898,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/data.py",
+    "remote_path": "kisti_nokgo/src/data.py",
+    "source_sha256": "9cb56a14011433616d35a3a5a6bd2ab24be277c7cc3c274aece80b5fd284e2a9",
+    "sha256": "9cb56a14011433616d35a3a5a6bd2ab24be277c7cc3c274aece80b5fd284e2a9",
+    "git_blob": "2246c4817e29c5248bde93f74e5dacc4dc527103",
+    "upload_size": 2309,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/metrics.py",
+    "remote_path": "kisti_nokgo/src/metrics.py",
+    "source_sha256": "783d5aabd1e8e874c1e93a2f0dbc27285df26cbb75e5398a6bd49f5ced6c27f1",
+    "sha256": "783d5aabd1e8e874c1e93a2f0dbc27285df26cbb75e5398a6bd49f5ced6c27f1",
+    "git_blob": "e1d2adcc04f8cffbd60db0154d8dbac9c99ed7a2",
+    "upload_size": 1500,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/run_experiment.py",
+    "remote_path": "kisti_nokgo/src/run_experiment.py",
+    "source_sha256": "1e077ea6be0f971bde9cbf05029fae13827122be45f3febd21c08d0d388ac6f8",
+    "sha256": "1e077ea6be0f971bde9cbf05029fae13827122be45f3febd21c08d0d388ac6f8",
+    "git_blob": "cec0ab72eaae0d0339572b29736d20513ed322df",
+    "upload_size": 9771,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/run_pipeline.py",
+    "remote_path": "kisti_nokgo/src/run_pipeline.py",
+    "source_sha256": "a6ac61f03043b5a50faf5abc8ca39f5b0121e4245b0f602a8da2c7e6be270795",
+    "sha256": "a6ac61f03043b5a50faf5abc8ca39f5b0121e4245b0f602a8da2c7e6be270795",
+    "git_blob": "ded9c3342e56d3e55e62f305e1b52fdcf40e7021",
+    "upload_size": 953,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/train.py",
+    "remote_path": "kisti_nokgo/src/train.py",
+    "source_sha256": "5c8651d740ec8178e75489c1f616c62b351531f78600cae11e05c5c931141eb8",
+    "sha256": "5c8651d740ec8178e75489c1f616c62b351531f78600cae11e05c5c931141eb8",
+    "git_blob": "b4bc37d1ac07916826b8119b8df66920c10783b8",
+    "upload_size": 725,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/validation.py",
+    "remote_path": "kisti_nokgo/src/validation.py",
+    "source_sha256": "831148820463971daf5bcc6091ef3f5680c30fbc977665a4ab145152d1e86857",
+    "sha256": "831148820463971daf5bcc6091ef3f5680c30fbc977665a4ab145152d1e86857",
+    "git_blob": "c99c45f7398ec19c9d4ca7293f7cfeaa7d38d42b",
+    "upload_size": 3217,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/EDA/__init__.py",
+    "remote_path": "kisti_nokgo/src/EDA/__init__.py",
+    "source_sha256": "a0dd00c2cfea7151d7f509faa3a25e3ebde1811c8745415b3dd8c7e491edc9a8",
+    "sha256": "a0dd00c2cfea7151d7f509faa3a25e3ebde1811c8745415b3dd8c7e491edc9a8",
+    "git_blob": "148687af963b21dd3f10c2e4ec75afbcc565db44",
+    "upload_size": 48,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/EDA/analyze_atoms.py",
+    "remote_path": "kisti_nokgo/src/EDA/analyze_atoms.py",
+    "source_sha256": "03378f6c93d455d34767e3238a739a3888ecf3d921009266197c20f7208c7f29",
+    "sha256": "03378f6c93d455d34767e3238a739a3888ecf3d921009266197c20f7208c7f29",
+    "git_blob": "a3082ed368937ab38aae6611a7da051ec730a065",
+    "upload_size": 13978,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/EDA/run_eda.py",
+    "remote_path": "kisti_nokgo/src/EDA/run_eda.py",
+    "source_sha256": "a4eab6dce4c9e78191aee5fe9b1b6fdb93c816db5d8c29ff94e6c1db0ef878d9",
+    "sha256": "a4eab6dce4c9e78191aee5fe9b1b6fdb93c816db5d8c29ff94e6c1db0ef878d9",
+    "git_blob": "7cddf7890aa76ffe7739c2d3eb95027c301b3835",
+    "upload_size": 8279,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/EDA/visuals.py",
+    "remote_path": "kisti_nokgo/src/EDA/visuals.py",
+    "source_sha256": "c4a9458127e2bbfed4819ebed4409c00e6c867f6770786f565193fd60d121607",
+    "sha256": "c4a9458127e2bbfed4819ebed4409c00e6c867f6770786f565193fd60d121607",
+    "git_blob": "16562da86b0d114a68cf40566e210daf1f5732f0",
+    "upload_size": 8446,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/features/__init__.py",
+    "remote_path": "kisti_nokgo/src/features/__init__.py",
+    "source_sha256": "058777336de49d87efd9c7fb62715929c6ca3ae9a106e1f50e5bf088f76f2f25",
+    "sha256": "058777336de49d87efd9c7fb62715929c6ca3ae9a106e1f50e5bf088f76f2f25",
+    "git_blob": "33b591930fa2894971305e68a218d6c7f001a3c5",
+    "upload_size": 160,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/features/build_features.py",
+    "remote_path": "kisti_nokgo/src/features/build_features.py",
+    "source_sha256": "d99311c633ce65f8541f3a98c5c836229e450ce6bb0fba06e9ae320d0569ac82",
+    "sha256": "d99311c633ce65f8541f3a98c5c836229e450ce6bb0fba06e9ae320d0569ac82",
+    "git_blob": "ea9cfb46415b24ce0a8cb8a40bafa193a354373a",
+    "upload_size": 2020,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/models/__init__.py",
+    "remote_path": "kisti_nokgo/src/models/__init__.py",
+    "source_sha256": "0394168ab64f060584a8a3edee666993997fb5d043a2d8588a2b0e5a98e2735c",
+    "sha256": "0394168ab64f060584a8a3edee666993997fb5d043a2d8588a2b0e5a98e2735c",
+    "git_blob": "847d7e25a230fd2fdf053d54bd219f25d00947f3",
+    "upload_size": 80,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/models/baseline.py",
+    "remote_path": "kisti_nokgo/src/models/baseline.py",
+    "source_sha256": "186715723a507040a03a65fb3326b39e04a5382cb7e9288fb1b8acd46c045425",
+    "sha256": "186715723a507040a03a65fb3326b39e04a5382cb7e9288fb1b8acd46c045425",
+    "git_blob": "5ee0e7031df224a834ff4469083fa06192b37245",
+    "upload_size": 866,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/__init__.py",
+    "remote_path": "kisti_nokgo/src/tests/__init__.py",
+    "source_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "git_blob": "8b137891791fe96927ad78e64b0aad7bded08bdc",
+    "upload_size": 1,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_artifacts.py",
+    "remote_path": "kisti_nokgo/src/tests/test_artifacts.py",
+    "source_sha256": "0e8cac5d78e4f7425419967d00b5a6a280c19d000aeabca0b886a350c86120ab",
+    "sha256": "0e8cac5d78e4f7425419967d00b5a6a280c19d000aeabca0b886a350c86120ab",
+    "git_blob": "213b171f7f65191d726bd885a7e6bbabb5f767d0",
+    "upload_size": 886,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_eda.py",
+    "remote_path": "kisti_nokgo/src/tests/test_eda.py",
+    "source_sha256": "3c79f9d8c36b28602e05d14510e0ae0b569b49fd8d028567a56167817c92ad8a",
+    "sha256": "3c79f9d8c36b28602e05d14510e0ae0b569b49fd8d028567a56167817c92ad8a",
+    "git_blob": "d3b754fc083b9212d6052643ddf76c788c2785be",
+    "upload_size": 2599,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_experiment_layout.py",
+    "remote_path": "kisti_nokgo/src/tests/test_experiment_layout.py",
+    "source_sha256": "17fbc788616921588c37bf87307934d2f00e864d4437e14bcf62c3d4cdfbb949",
+    "sha256": "17fbc788616921588c37bf87307934d2f00e864d4437e14bcf62c3d4cdfbb949",
+    "git_blob": "c1de2f200ed01275a562100acb4d14ae85a0ac62",
+    "upload_size": 2733,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_features.py",
+    "remote_path": "kisti_nokgo/src/tests/test_features.py",
+    "source_sha256": "4f34f7e70995496bb782c805a1ed9b93755b244ef8d49e95ce7f9591a244f186",
+    "sha256": "4f34f7e70995496bb782c805a1ed9b93755b244ef8d49e95ce7f9591a244f186",
+    "git_blob": "4bf3da06f7d02f300a7245d4fe8db5579fcdd576",
+    "upload_size": 670,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_metrics.py",
+    "remote_path": "kisti_nokgo/src/tests/test_metrics.py",
+    "source_sha256": "e7821ed65317edbef09373adb6940a793f38ad3a0fa41f4eb29e80d05c664b8c",
+    "sha256": "e7821ed65317edbef09373adb6940a793f38ad3a0fa41f4eb29e80d05c664b8c",
+    "git_blob": "5ba00d06e7ae7513689edd3c5b73f8e581820d17",
+    "upload_size": 551,
+    "sanitized": []
+  },
+  {
+    "project": "kisti_nokgo",
+    "path": "src/tests/test_smoke_pipeline.py",
+    "remote_path": "kisti_nokgo/src/tests/test_smoke_pipeline.py",
+    "source_sha256": "3a4086ccb3a38285b83bfeacace07b310a1a8668f0ecb8e2824cf4b30d5bf604",
+    "sha256": "3a4086ccb3a38285b83bfeacace07b310a1a8668f0ecb8e2824cf4b30d5bf604",
+    "git_blob": "32ee780f43e51225fcc06726907d8eff39150a48",
+    "upload_size": 1197,
+    "sanitized": []
+  }
+]

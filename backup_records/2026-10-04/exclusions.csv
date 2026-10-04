@@ -1,0 +1,13 @@
+project,path,reason,size
+kisti_6,src/__pycache__/,runtime_or_link,
+kisti_6,src/EDA/__pycache__/,runtime_or_link,
+kisti_6,src/features/__pycache__/,runtime_or_link,
+kisti_6,src/models/__pycache__/,runtime_or_link,
+kisti_6,src/tests/__pycache__/,runtime_or_link,
+kisti_nokgo,.runtime_hwp/,runtime_or_link,
+kisti_nokgo,.tmp_hwp_extract.txt,temporary,4892
+kisti_nokgo,src/__pycache__/,runtime_or_link,
+kisti_nokgo,src/EDA/__pycache__/,runtime_or_link,
+kisti_nokgo,src/features/__pycache__/,runtime_or_link,
+kisti_nokgo,src/models/__pycache__/,runtime_or_link,
+kisti_nokgo,src/tests/__pycache__/,runtime_or_link,

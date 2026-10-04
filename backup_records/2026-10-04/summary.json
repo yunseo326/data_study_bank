@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-04",
+  "timezone": "Asia/Seoul",
+  "repository": "yunseo326/data_study_bank",
+  "branch": "backup/2026-10-04",
+  "parent_commit": "0fe6e913051bf7cfddde195df7de679fa5802d33",
+  "original_remote_main": "0fe6e913051bf7cfddde195df7de679fa5802d33",
+  "selected_file_count": 104,
+  "selected_bytes": 2203008,
+  "new_or_changed_files": 104,
+  "source_projects": [
+    "kisti_6",
+    "kisti_nokgo"
+  ],
+  "sanitized_files": [],
+  "excluded_reason_counts": {
+    "runtime_or_link": 11,
+    "temporary": 1
+  },
+  "restore_notes": "kisti_6: final train/test data are absent locally; the preserved 296-row sample is reference material, not final training data. kisti_nokgo: full participant data and final scoring rules remain unavailable/uncertain. Read each CURRENT_STATE.md, install requirements.txt in a new environment, acquire official inputs, then establish validation before running experiments.",
+  "security_scan": {
+    "repo": "data_study_bank",
+    "text_files": 96,
+    "bytes_scanned": 2386371,
+    "binary_not_secret_text_scanned": [
+      "kisti_6/references/competitions/2026_river_level/sources/2026_참가신청서.hwp",
+      "kisti_nokgo/outputs/competition_application/template.hwp",
+      "kisti_nokgo/outputs/competition_application/rendered/page-1.png",
+      "kisti_nokgo/outputs/competition_application/rendered/page-2.png",
+      "kisti_nokgo/outputs/competition_application/rendered/page-3.png",
+      "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/2026_참가신청서.hwp",
+      "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/다운로드 (1).png",
+      "kisti_nokgo/references/competitions/2026_aida_algal_bloom/sources/다운로드.png"
+    ],
+    "finding_count": 0
+  },
+  "reviewed_noncredential_hash_findings": [],
+  "unresolved_findings": [],
+  "source_programs_executed": false,
+  "local_unpushed_history_uploaded": false,
+  "python_parse_errors": [],
+  "new_metadata_files": 4,
+  "deleted_from_backup_tree_only": []
+}
